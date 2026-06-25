@@ -1,0 +1,777 @@
+ /* ================= General ================= */
+ * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+     font-family: 'Segoe UI', sans-serif;
+     -webkit-user-select: none;
+     user-select: none;
+ }
+
+ input, textarea, [contenteditable="true"] {
+     -webkit-user-select: text;
+     user-select: text;
+ }
+
+ body {
+     display: flex;
+     height: 100vh;
+     background: #0a1f16;
+     color: white;
+     overflow: hidden;
+ }
+
+ .sidebar {
+     width: 215px;
+     background: #071b12;
+     padding: 30px 20px;
+     border-right: 1px solid rgba(0, 255, 170, 0.2);
+     position: fixed;
+     height: 100vh;
+     overflow-y: auto; /* Add scrollbar to sidebar if content is long */
+     padding-bottom: 50px; /* Extra space sa baba para hindi putol */
+     scrollbar-width: thin;
+     scrollbar-color: #00ffaa #071b12;
+ }
+
+ .sidebar::-webkit-scrollbar {
+     width: 5px;
+ }
+
+ .sidebar::-webkit-scrollbar-track {
+     background: #071b12;
+ }
+
+ .sidebar::-webkit-scrollbar-thumb {
+     background: #00ffaa;
+     border-radius: 10px;
+ }
+
+ .sidebar h2 {
+     margin-bottom: 40px;
+     color: #00ffaa;
+ }
+
+ .sidebar ul {
+     list-style: none;
+ }
+
+ .sidebar ul li {
+     margin: 20px 0;
+     padding: 10px;
+     border-radius: 10px;
+     cursor: pointer;
+     transition: 0.3s;
+     -webkit-user-select: none;
+     user-select: none;
+ }
+
+ .sidebar ul li:hover {
+     background: rgba(0, 255, 170, 0.15);
+     box-shadow: 0 0 10px #00ffaa;
+ }
+
+ .main {
+     margin-left: 240px;
+     margin-right: 280px;
+     padding: 40px;
+     width: 100%;
+     max-width: 800px;
+     height: 100vh;
+     overflow-y: auto;
+     scrollbar-width: thin;
+     scrollbar-color: #00ffaa #071b12;
+ }
+
+ ::-webkit-scrollbar { /* Make scrollbar styling global for Admin */
+     width: 8px;
+ }
+
+ ::-webkit-scrollbar-track {
+     background: #071b12;
+ }
+
+ ::-webkit-scrollbar-thumb {
+     background-color: #00ffaa;
+     border-radius: 4px;
+ }
+
+ .create-post button {
+     width: 90%;
+     padding: 12px;
+     border: none;
+     border-radius: 20px;
+     background: #00ffaa;
+     color: #001a0f;
+     font-weight: bold;
+     cursor: pointer;
+     margin-bottom: 25px;
+     margin-left: 50px;
+     -webkit-user-select: none;
+     user-select: none;
+ }
+
+ .create-post button:hover {
+     box-shadow: 0 0 15px #00ffaa;
+ }
+
+ .post {
+     background: #102e22;
+     padding: 20px;
+     border-radius: 20px;
+     margin-bottom: 20px;
+     border: 1px solid rgba(0, 255, 170, 0.2);
+     transition: 0.3s;
+ }
+
+ .post:hover {
+     transform: translateY(-5px);
+     box-shadow: 0 0 20px rgba(0, 255, 170, 0.3);
+ }
+
+ .post-header {
+     display: flex;
+     align-items: center;
+ }
+
+ .profile {
+     width: 45px;
+     height: 45px;
+     border-radius: 50%;
+     background: #00ffaa;
+     color: #001a0f;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     font-weight: bold;
+     margin-right: 10px;
+ }
+
+ .time {
+     font-size: 12px;
+     color: #66ffd9;
+ }
+
+ .right-sidebar {
+     width: 280px;
+     background: #071b12;
+     padding: 30px 20px;
+     border-left: 1px solid rgba(0, 255, 170, 0.2);
+     position: fixed;
+     right: 0;
+     height: 100vh;
+     overflow: auto;
+     /* Hide scrollbar but keep functionality */
+     -ms-overflow-style: none;  /* IE and Edge */
+     scrollbar-width: none;  /* Firefox */
+ }
+ 
+ .right-sidebar::-webkit-scrollbar {
+     display: none; /* Chrome, Safari, and Opera */
+ }
+
+ .right-sidebar h3 {
+     margin-bottom: 20px;
+     color: #00ffaa;
+ }
+
+ .gc {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 12px;
+     margin-bottom: 15px;
+     background: #102e22;
+     border-radius: 15px;
+     cursor: pointer;
+     transition: 0.3s;
+     -webkit-user-select: none;
+     user-select: none;
+ }
+
+ .gc:hover {
+     background: rgba(0, 255, 170, 0.2);
+     box-shadow: 0 0 10px #00ffaa;
+ }
+
+ .status {
+     width: 10px;
+     height: 10px;
+     border-radius: 50%;
+     background: gray;
+ }
+
+ .status.online {
+     background: #00ffaa;
+     box-shadow: 0 0 10px #00ffaa;
+ }
+
+ /* ================= Modal ================= */
+ .modal {
+     display: none;
+     position: fixed;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background: rgba(0, 0, 0, 0.8);
+     justify-content: center;
+     align-items: center;
+     z-index: 1000;
+ }
+
+ .modal-content {
+     background: #102e22;
+     padding: 30px;
+     border-radius: 20px;
+     border: 1px solid rgba(0, 255, 170, 0.4);
+     animation: fadeIn 0.3s ease;
+     text-align: center;
+ }
+
+ .modal-content h3 {
+     margin-bottom: 15px;
+     color: #00ffaa;
+ }
+
+ .modal-content textarea {
+     width: 100%;
+     height: 80px;
+     background: #071b12;
+     border: none;
+     outline: none;
+     padding: 10px;
+     color: white;
+     border-radius: 10px;
+     margin-bottom: 15px;
+ }
+
+ .modal-content select {
+     width: 100%;
+     padding: 8px;
+     margin-bottom: 10px;
+     border-radius: 10px;
+     border: none;
+     background: #071b12;
+     color: white;
+ }
+
+ .submit-post {
+     width: 100%;
+     padding: 10px;
+     border: none;
+     border-radius: 20px;
+     background: #00ffaa;
+     color: #001a0f;
+     font-weight: bold;
+     cursor: pointer;
+     -webkit-user-select: none;
+     user-select: none;
+ }
+
+ .submit-post:hover {
+     box-shadow: 0 0 15px #00ffaa;
+ }
+
+ .close {
+     float: right;
+     font-size: 20px;
+     cursor: pointer;
+     color: #00ffaa;
+ }
+
+ .upload-section {
+     display: flex;
+     gap: 10px;
+     margin-bottom: 10px;
+ }
+
+ .upload-section input {
+     display: none;
+ }
+
+ .upload-section label {
+     background: #00ffaa;
+     color: #001a0f;
+     padding: 6px 12px;
+     border-radius: 15px;
+     cursor: pointer;
+     font-size: 14px;
+ }
+
+ .photo-preview {
+     margin-top: 10px;
+     margin-bottom: 15px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+ }
+
+ .photo-preview img {
+     max-height: 150px;
+     border-radius: 10px;
+     border: 1px solid rgba(0, 255, 170, 0.3);
+ }
+
+ @keyframes fadeIn {
+     from {
+         opacity: 0;
+         transform: scale(0.9);
+     }
+
+     to {
+         opacity: 1;
+         transform: scale(1);
+     }
+ }
+
+ .icon {
+     display: flex;
+     height: 70px;
+     margin-right: 10px;
+     position: relative;
+     top: 10px;
+     align-items: center;
+     justify-content: center;
+     left: 40px;
+ }
+
+ .icon2 {
+     height: 25px;
+ }
+
+/* ================= Logout Button ================= */
+/* From Uiverse.io by Lealdos - Enhanced with Animations */
+.Btn1 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4), 
+                0 0 20px rgba(29, 185, 84, 0.2);
+    background: linear-gradient(135deg, #1db954, #1ed760, #1db954);
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite, pulseGlow 2s ease-in-out infinite;
+}
+
+/* Animated gradient background */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Pulse glow animation */
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4), 
+                    0 0 20px rgba(29, 185, 84, 0.2);
+    }
+    50% {
+        box-shadow: 0 4px 25px rgba(29, 185, 84, 0.6), 
+                    0 0 30px rgba(29, 185, 84, 0.4);
+    }
+}
+
+/* Icon container */
+.sign1 {
+    width: 100%;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.sign1 svg {
+    width: 18px;
+    transition: transform 0.3s ease;
+}
+
+.sign1 svg path {
+    fill: white;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Text */
+.text {
+    position: absolute;
+    right: 0%;
+    width: 0%;
+    opacity: 0;
+    color: white;
+    font-size: 1.2em;
+    font-weight: 600;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 2;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+}
+
+/* Hover effect on button width */
+.Btn1:hover {
+    width: 130px;
+    border-radius: 40px;
+    transform: scale(1.05);
+    box-shadow: 0 6px 30px rgba(29, 185, 84, 0.6), 
+                0 0 40px rgba(29, 185, 84, 0.4),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+    animation: none;
+    background: linear-gradient(135deg, #1ed760, #1db954, #1ed760);
+}
+
+.Btn1:hover .sign1 {
+    width: 30%;
+    padding-left: 20px;
+    transform: rotate(360deg);
+}
+
+.Btn1:hover .sign1 svg {
+    transform: scale(1.1);
+}
+
+/* Hover effect button's text */
+.Btn1:hover .text {
+    opacity: 1;
+    width: 70%;
+    padding-right: 10px;
+    animation: slideInText 0.4s ease;
+}
+
+@keyframes slideInText {
+    from {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Button click effect */
+.Btn1:active {
+    transform: translate(2px, 2px) scale(0.95);
+    box-shadow: 0 2px 10px rgba(29, 185, 84, 0.4);
+}
+
+/* Ripple effect on click */
+.Btn1::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.Btn1:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* ================= Logout Modal ================= */
+#logoutModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 31, 22, 0.95);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+#logoutModal .logout-modal-content {
+    background: linear-gradient(135deg, #102e22, #071b12);
+    padding: 40px 50px;
+    border-radius: 25px;
+    border: 2px solid rgba(0, 255, 170, 0.5);
+    text-align: center;
+    color: white;
+    min-width: 350px;
+    max-width: 450px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 255, 170, 0.2);
+    animation: fadeInModal 0.3s ease forwards;
+}
+
+#logoutModal .logout-modal-content h3 {
+    color: #00ffaa;
+    margin-bottom: 15px;
+    font-size: 24px;
+    text-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+}
+
+#logoutModal .logout-modal-content p {
+    color: #ccffeb;
+    margin-bottom: 30px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.logout-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.logout-confirm-btn {
+    padding: 14px 35px;
+    background: linear-gradient(135deg, #ff4444, #cc0000);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    font-size: 16px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.logout-confirm-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+    z-index: -1;
+}
+
+.logout-confirm-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.logout-confirm-btn:hover {
+    background: linear-gradient(135deg, #ff6666, #ff0000);
+    box-shadow: 0 6px 25px rgba(255, 68, 68, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px) scale(1.02);
+}
+
+.logout-confirm-btn:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 0 2px 10px rgba(255, 68, 68, 0.4);
+}
+
+.logout-cancel-btn {
+    padding: 14px 35px;
+    background: linear-gradient(135deg, #102e22, #071b12);
+    color: #00ffaa;
+    border: 2px solid rgba(0, 255, 170, 0.5);
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.logout-cancel-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(0, 255, 170, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+    z-index: -1;
+}
+
+.logout-cancel-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.logout-cancel-btn:hover {
+    background: rgba(0, 255, 170, 0.15);
+    border-color: #00ffaa;
+    box-shadow: 0 0 20px rgba(0, 255, 170, 0.4), inset 0 0 20px rgba(0, 255, 170, 0.1);
+    transform: translateY(-3px) scale(1.02);
+    color: #66ffd9;
+}
+
+.logout-cancel-btn:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+}
+
+@keyframes fadeInModal {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+
+/* From Uiverse.io by Lealdos */ 
+.Btn1 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: 0.3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  background-color: RGB(29, 185, 84);
+}
+
+/* ================= Admin Panel ================= */
+.admin-section {
+    background: #102e22;
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(0, 255, 170, 0.2);
+}
+.admin-section h3 {
+    color: #00ffaa;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+}
+.admin-form-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.admin-form-row input[type="text"] {
+    flex: 1;
+    padding: 10px 14px;
+    background: #071b12;
+    border: 1px solid rgba(0, 255, 170, 0.3);
+    border-radius: 10px;
+    color: white;
+    outline: none;
+}
+.admin-form-row input[type="text"]:focus {
+    border-color: #00ffaa;
+    box-shadow: 0 0 8px rgba(0, 255, 170, 0.3);
+}
+.admin-form-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #00ffaa;
+    cursor: pointer;
+}
+.admin-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.admin-btn-save {
+    background: #00ffaa;
+    color: #001a0f;
+}
+.admin-btn-save:hover {
+    box-shadow: 0 0 15px #00ffaa;
+}
+.admin-btn-add {
+    background: rgba(0, 255, 170, 0.2);
+    color: #00ffaa;
+    border: 1px solid rgba(0, 255, 170, 0.5);
+}
+.admin-btn-add:hover {
+    background: rgba(0, 255, 170, 0.3);
+    box-shadow: 0 0 10px #00ffaa;
+}
+.admin-btn-delete {
+    background: rgba(255, 68, 68, 0.3);
+    color: #ff6666;
+    border: 1px solid rgba(255, 68, 68, 0.5);
+    padding: 6px 12px;
+    font-size: 14px;
+}
+.admin-btn-delete:hover {
+    background: rgba(255, 68, 68, 0.5);
+    color: white;
+}
+.admin-success {
+    background: rgba(0, 255, 170, 0.2);
+    color: #00ffaa;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(0, 255, 170, 0.4);
+}
+.admin-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #071b12;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(0, 255, 170, 0.15);
+}
+.sidebar-link {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    transition: 0.3s;
+    width: 100%;
+}
+.sidebar-link:hover {
+    background: rgba(0, 255, 170, 0.15);
+    box-shadow: 0 0 10px #00ffaa;
+}
+.sidebar-link.admin-active {
+    background: rgba(0, 255, 170, 0.25);
+    color: #00ffaa;
+    box-shadow: 0 0 10px #00ffaa;
+}
+
+.notif{
+    height: 20px;
+    width: 20px;
+    
+}

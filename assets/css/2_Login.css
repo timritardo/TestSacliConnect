@@ -1,0 +1,794 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        input, textarea, [contenteditable="true"] {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            background: #0a1f16;
+            /* background: linear-gradient(-45deg, #071b12, #0a1f16, #083524, #071b12); */
+            background-size: 400% 400%;
+            animation: move 10s ease infinite;
+        }
+
+        @keyframes move {
+            0% {
+                background-position: 0% 50%
+            }
+
+            50% {
+                background-position: 100% 50%
+            }
+
+            100% {
+                background-position: 0% 50%
+            }
+        }
+
+        body.theme-christmas {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #87ceeb 100%) !important;
+            animation: none;
+        }
+
+        body.theme-christmas::before, body.theme-christmas::after { 
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, #fff 1px, transparent 1px),
+                radial-gradient(circle at 50% 10%, #fff 2px, transparent 2px),
+                radial-gradient(circle at 80% 40%, #fff 1px, transparent 1px),
+                radial-gradient(circle at 10% 70%, #fff 2.5px, transparent 2.5px),
+                radial-gradient(circle at 40% 90%, #fff 1px, transparent 1px),
+                radial-gradient(circle at 70% 60%, #fff 2px, transparent 2px),
+                radial-gradient(circle at 90% 20%, #fff 1px, transparent 1px);
+            background-size: 250px 250px;
+            animation: snow-fall 10s linear infinite;
+            z-index: -1; pointer-events: none; opacity: 0.8;
+        }
+
+        body.theme-christmas::after {
+            background-size: 400px 400px;
+            animation-duration: 15s;
+            animation-direction: reverse;
+            filter: blur(1px);
+            opacity: 0.4;
+        }
+
+        @keyframes snow-fall {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 250px; }
+        }
+
+        .login-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* This can stay to center the card vertically if needed */
+            gap: 15px; /* Spacing between nav and card */
+            position: relative; /* Needed for some layouts */
+        }
+
+        .card {
+            position: relative; /* Ensure card is part of the flow */
+            width: 350px;
+            padding: 30px;
+            border-radius: 30px;
+            background: rgba(16, 46, 34, .65);
+            -webkit-backdrop-filter: blur(18px);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(0, 255, 170, .3);
+            box-shadow: 0 0 40px rgba(0, 255, 170, .15)
+            
+            
+        }
+
+        .card .logo strong {
+            /* Apply glowing text properties */
+            background: linear-gradient(90deg, #fff, #00ffaa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGlow 2s ease-in-out infinite alternate;
+            /* Ensure it overrides any solid color set by .card .logo */
+            color: transparent; /* Make sure the text-fill-color takes precedence */
+        }
+
+        .logo {
+            text-align: center;
+            color: #00ffaa;
+            font-size: 22px;
+            margin-bottom: 20px
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px
+        }
+
+        .input {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            border: 1.5px solid rgba(0, 255, 170, .3);
+            background: transparent;
+            color: #ffffff;
+            font-size: 1rem
+        }
+
+        .user-label {
+            position: absolute;
+            left: 15px;
+            color: #fdfdfd;
+            transform: translateY(0.8rem);
+            transition: .3s
+        }
+
+        .input:focus,
+        .input:valid {
+            outline: none;
+            border: 1.5px solid #ffffff;
+            box-shadow: 0 0 15px rgba(0, 255, 170, .4)
+        }
+
+        .input:focus~.user-label,
+        .input:valid~.user-label {
+            transform: translateY(-50%) scale(.8);
+            background: #102e22;
+            padding: 0 .4em;
+            color: #ffffff
+        }
+
+        /* --- Custom Eye Toggle using cl-checkbox logic --- */
+        .cl-checkbox {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            z-index: 15;
+        }
+
+        /* Ripple Input Logic */
+        .cl-checkbox > input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            z-index: -1;
+            position: absolute;
+            left: -8px;
+            top: -8px;
+            display: block;
+            margin: 0;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 255, 170, 0.6);
+            box-shadow: none;
+            outline: none;
+            opacity: 0;
+            transform: scale(1);
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.2s;
+        }
+
+        .cl-checkbox > span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            color: #00ffaa;
+            transition: color 0.3s ease;
+        }
+
+        /* Eye Icon Styling */
+        .cl-checkbox svg {
+            position: absolute;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cl-checkbox .eye-closed {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .cl-checkbox .eye-open {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        /* State: Checked (Show Password) */
+        .cl-checkbox > input:checked + span {
+            color: #fff;
+        }
+
+        .cl-checkbox > input:checked + span .eye-closed {
+            opacity: 0;
+            transform: scale(0.5) rotate(-45deg);
+        }
+
+        .cl-checkbox > input:checked + span .eye-open {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+
+        /* Hover, Focus, Active Animations from your request */
+        .cl-checkbox:hover > input {
+            opacity: 0.08;
+        }
+
+        .cl-checkbox > input:focus {
+            opacity: 0.15;
+        }
+
+        .cl-checkbox:hover > input:focus {
+            opacity: 0.2;
+        }
+
+        .cl-checkbox > input:active {
+            opacity: 1;
+            transform: scale(0);
+            transition: transform 0s, opacity 0s;
+        }
+
+        button {
+          position: relative;
+          top: 5px;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 30px;
+            background: #00ffaa;
+            color: #001a0f;
+            font-weight: bold;
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        button:hover {
+            box-shadow: 0 0 25px #00ffaa
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px
+        }
+
+        .icon2{
+            position: relative;
+            height: 90px;
+            left: 100px;
+        }
+
+        #alumniSignupSection {
+            margin-top: 20px;
+            /* Add more styling as needed */
+        }
+
+
+        /* ui verse */
+
+        /* From Uiverse.io by javierBarroso */ 
+.parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  transform-style: preserve-3d
+}
+
+.child {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+  transition: all 0.3s cubic-bezier(0.68, 0.85, 0.265, 1.85);
+  border-radius: 5px;
+  margin: 0 5px;
+  box-shadow:
+    inset 1px 1px 2px #fff,
+    0 0 5px #4442;
+}
+
+.child:hover {
+  background-color: white;
+  background-position:
+    -100px 100px,
+    -100px 100px;
+  /*transform: rotate3d(0.5, 1, 0, 30deg);*/
+  transform: perspective(180px) rotateX(60deg) translateY(2px);
+}
+
+.child-1:hover {
+  box-shadow: 0px 10px 10px #1e90ff;
+}
+.child-2:hover {
+  box-shadow: 0px 10px 10px #ff00ff;
+}
+.child-3:hover {
+  box-shadow: 0px 10px 10px #000;
+}
+.child-4:hover {
+  box-shadow: 0px 10px 10px #4267b2;
+}
+
+.button {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  transition-duration: 0.5s;
+  transition-timing-function: cubic-bezier(0.68, -0.85, 0.265, 1.55);
+}
+
+.child:hover > .button {
+  transform: translate3d(0px, 20px, 30px) perspective(80px) rotateX(-60deg)
+    translateY(2px) translateZ(10px);
+}l
+
+
+.video3{
+position: relative;
+right: 40px;
+width: auto;
+height: auto;
+border-radius: 20px;
+padding: 8px;
+background: rgba(0, 255, 170, 0.05);
+border: 1px solid rgba(0, 255, 170, 0.2);
+box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 255, 170, 0.05);
+transition: all 0.4s ease;
+overflow: visible; /* Pinapayagan ang corners na lumabas nang kaunti */
+}
+
+/* Tech Corners (L-shapes) */
+.video3 .corner {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border: 3px solid #00ffaa;
+    z-index: 10;
+    pointer-events: none;
+    filter: drop-shadow(0 0 5px #00ffaa);
+    transition: 0.3s;
+}
+.video3 .tl { top: -2px; left: -2px; border-right: none; border-bottom: none; border-radius: 15px 0 0 0; }
+.video3 .tr { top: -2px; right: -2px; border-left: none; border-bottom: none; border-radius: 0 15px 0 0; }
+.video3 .bl { bottom: -2px; left: -2px; border-right: none; border-top: none; border-radius: 0 0 0 15px; }
+.video3 .br { bottom: -2px; right: -2px; border-left: none; border-top: none; border-radius: 0 0 15px 0; }
+
+.video3:hover .corner {
+    width: 35px;
+    height: 35px;
+    filter: drop-shadow(0 0 15px #00ffaa);
+}
+
+@keyframes videoGlitch {
+    0% { transform: translate(2px, 0); filter: hue-rotate(90deg) brightness(2); }
+    25% { transform: translate(-2px, 0); clip-path: inset(20% 0 50% 0); }
+    50% { transform: translate(2px, 0); clip-path: inset(40% 0 10% 0); }
+    75% { transform: translate(-2px, 0); filter: contrast(2); }
+    100% { transform: translate(0); filter: none; clip-path: none; }
+}
+
+.video3.switching { animation: videoGlitch 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+
+/* New animation for beat-synced glow */
+@keyframes beat-glow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(0, 255, 170, 0.3), 0 0 0px rgba(0, 255, 170, 0.1);
+        border-color: rgba(0, 255, 170, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(0, 255, 170, 0.8), 0 0 15px rgba(255, 255, 255, 0.5);
+        border-color: #00ffaa;
+    }
+}
+
+/* Apply animation when 'beat-active' class is present */
+.video3.beat-active {
+    animation: beat-glow 0.8s ease-in-out infinite alternate; /* Adjust timing for desired "beat" feel */
+}
+
+.preview-box {
+            width: auto;
+            height: auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .preview-video {
+            display: block;
+            width: auto;
+            height: auto;
+            max-width: 55vw; /* Pinalaki nang kaunti ang lapad */
+            max-height: 75vh; /* Pinalaki nang kaunti ang taas */
+            object-fit: contain;
+            border-radius: 20px;
+        }
+        header {
+            background: rgba(16, 46, 34, 0.4); /* Mas transparent para sa glass effect */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 10px 40px;
+            position: fixed;
+            width: 100%;
+            height: 80px;
+            z-index: 100;
+            top: 0;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 255, 170, 0.15); /* Subtle border accent */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Modern shadow for depth */
+        }
+
+        header .logo {
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: auto;
+            gap: 15px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        header .logo:hover {
+            transform: scale(1.02);
+        }
+
+        .logostanne{
+            height: 50px;
+            width: 50px;
+            filter: drop-shadow(0 0 12px rgba(0, 255, 170, 0.7));
+            animation: logoPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(0, 255, 170, 0.7)); } 50% { transform: scale(1.1); filter: drop-shadow(0 0 25px rgba(0, 255, 170, 0.9)); } }
+
+        .nameschool {
+            font-family: 'Segoe UI', Arial, sans-serif !important;
+            font-size: 1.9rem;
+            letter-spacing: 1.5px;
+            font-weight: 900;
+            white-space: nowrap;
+            color: #ffffff !important;
+            background: linear-gradient(to bottom, #ffffff 40%, #00ffaa 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 12px rgba(0, 255, 170, 0.4));
+            animation: textGlow 2s ease-in-out infinite alternate;
+            margin: 0;
+            transition: 0.3s ease;
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+        .paragraph{
+            text-align: center;
+            color: #509b83;
+            font-size: 13px;
+        }
+
+  .background-logo {
+    position: fixed;  /* palaging nasa likod ng screen */
+    top: 50%;         /* ilagay sa gitna vertical */
+    left: 85%;        /* ilagay sa gitna horizontal */
+    transform: translate(-50%, -50%); /* para centered siya */
+    width: 1300px;     /* adjust mo size depende sa gusto mo */
+    height: 1300px;
+    background: url('path-to-logo.png') no-repeat center center;
+    background-size: contain;  /* para hindi ma-stretch */
+    opacity: 0.1;      /* para hindi overpowering, pwede mo i-adjust */
+    z-index: -1;       /* ilalagay sa likod ng lahat ng content */
+    pointer-events: none; /* para hindi maka-interact ang mouse dito */
+  }
+
+  .background-logo1 {
+    position: fixed;  /* palaging nasa likod ng screen */
+    top: 50%;         /* ilagay sa gitna vertical */
+    left: 5%;        /* ilagay sa gitna horizontal */
+    transform: translate(-50%, -50%); /* para centered siya */
+    width: 1800px;     /* adjust mo size depende sa gusto mo */
+    height: 1800px;
+    background: url('path-to-logo.png') no-repeat center center;
+    background-size: contain;  /* para hindi ma-stretch */
+    opacity: 0.1;      /* para hindi overpowering, pwede mo i-adjust */
+    z-index: -1;       /* ilalagay sa likod ng lahat ng content */
+    pointer-events: none; /* para hindi maka-interact ang mouse dito */
+  }
+
+  /* Content ay dapat naka relative para nasa ibabaw siya */
+  .content {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+  }
+
+
+
+  /* From Uiverse.io by GustavoAlmeidaPuff */ 
+/* theme-mode-style */
+.mode + .container {
+  --color-pure: #000;
+  --color-primary: #f7f7f771;
+  --color-secondary: #0000003d;
+  --muted: #0ad3145e;
+}
+.mode { display: none !important; }
+.mode:checked + .container {
+  --color-pure: #ffffff;
+  --color-primary: #212121;
+  --color-secondary: #ffffff;
+  --muted: #080808;
+}
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.container .theme {
+  color: var(--color-secondary);
+  background-color: var(--color-primary);
+  position: relative;
+  cursor: pointer;
+  z-index: 9;
+  -webkit-user-select: none;
+  user-select: none;
+  border: 1px solid var(--muted);
+  border-radius: calc(var(--round) - var(--p-y));
+  margin-left: calc(var(--p-x) * 2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  transition: background-color 0.25s linear;
+}
+.container .theme:hover {
+  background-color: var(--muted);
+}
+.container .theme::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--p-x) * -1);
+  width: 1px;
+  height: 100%;
+  background-color: var(--muted);
+}
+.container .theme span {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  padding: 0.125rem;
+  border-radius: 9999px;
+  align-items: center;
+  justify-content: center;
+}
+.mode:checked + .container .theme span.light,
+.mode + .container .theme span.dark {
+  display: none;
+}
+.mode + .container .theme span.light,
+.mode:checked + .container .theme span.dark {
+  display: flex;
+}
+.container .theme svg {
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke: currentColor;
+  fill: none;
+  height: 22px;
+  width: 22px;
+}
+
+/* main style */
+.wrap {
+  position: relative; /* Inalis ang maling right offsets */
+  margin: 0 auto;
+  --round: 10px;
+  --p-x: 8px;
+  --p-y: 4px;
+  --w-label: 90px;
+  display: flex;
+  align-items: center;
+  padding: var(--p-y) var(--p-x);
+  background: var(--color-primary);
+  border-radius: var(--round);
+  max-width: 100%;
+  overflow-x: auto;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  z-index: 1;
+}
+
+.wrap::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
+.wrap input {
+  height: 0;
+  width: 0;
+  position: absolute;
+  overflow: hidden;
+  display: none;
+  visibility: hidden;
+}
+
+.label {
+  cursor: pointer;
+  outline: none;
+  font-size: 0.875rem;
+  letter-spacing: initial;
+  font-weight: 500;
+  color: var(--color-secondary);
+  background: transparent;
+  padding: 12px 16px;
+  width: var(--w-label);
+  min-width: var(--w-label);
+  text-decoration: none;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: color 0.25s ease;
+  outline-offset: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.label span {
+    display: inline-block;      /* siguraduhing block-level para sa ellipsis */
+    width: 100%;            /* hindi lalampas sa parent */
+    white-space: nowrap;        /* single line lang */
+    overflow: hidden;           /* itago ang sobra */
+    text-overflow: ellipsis;    /* ipakita ang "..." sa sobra */
+}
+
+
+.wrap input[class*="rd-"]:checked + label {
+  color: var(--color-pure);
+}
+
+        /* Animations */
+        @keyframes textGlow { from { text-shadow: 0 0 5px rgba(0, 255, 170, 0.2); } to { text-shadow: 0 0 15px rgba(0, 255, 170, 0.6); } }
+
+
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: absolute;
+  transform-origin: 0 0 0;
+  height: 100%;
+  width: var(--w-label);
+  z-index: 0;
+  transition: transform 0.5s cubic-bezier(0.33, 0.83, 0.99, 0.98);
+  /* transition: transform 0.5s cubic-bezier(0.33, 0.83, 0.99, 0.98); */ /* Removed for instant switch */
+}
+.bar::before,
+.bar::after {
+  content: "";
+  position: absolute;
+  height: 4px;
+  width: 100%;
+  background: var(--color-secondary);
+}
+.bar::before {
+  top: 0;
+  border-radius: 0 0 9999px 9999px;
+  background-color: #00ff00;
+}
+.bar::after {
+  bottom: 0;
+  border-radius: 9999px 9999px 0 0;
+  background-color: #00ff00;
+}
+
+.slidebar {
+  position: absolute;
+  height: calc(100% - (var(--p-y) * 4));
+  width: var(--w-label);
+  border-radius: calc(var(--round) - var(--p-y));
+  background: var(--muted);
+  transform-origin: 0 0 0;
+  z-index: 0;
+  transition: transform 0.5s cubic-bezier(0.33, 0.83, 0.99, 0.98);
+  /* transition: transform 0.5s cubic-bezier(0.33, 0.83, 0.99, 0.98); */ /* Removed for instant switch */
+}
+
+.rd-1:checked ~ .bar,
+.rd-1:checked ~ .slidebar,
+.rd-1 + label:hover ~ .slidebar {
+  transform: translateX(0) scaleX(1);
+}
+.rd-2:checked ~ .bar,
+.rd-2:checked ~ .slidebar,
+.rd-2 + label:hover ~ .slidebar {
+  transform: translateX(100%) scaleX(1);
+}
+.rd-3:checked ~ .bar,
+.rd-3:checked ~ .slidebar,
+.rd-3 + label:hover ~ .slidebar {
+  transform: translateX(200%) scaleX(1);
+}
+.rd-4:checked ~ .bar,
+.rd-4:checked ~ .slidebar,
+.rd-4 + label:hover ~ .slidebar {
+  transform: translateX(300%) scaleX(1);
+}
+
+/* ================= MOBILE RESPONSIVE ================= */
+@media (max-width: 900px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+        display: flex; /* Keep flex for vertical centering */
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .video3 {
+        display: none; /* Hide video on mobile */
+    }
+
+    .card {
+        width: 100%;
+        max-width: 400px;
+        padding: 30px;
+        margin: 0 auto; /* Center the card */
+    }
+
+    .icon2 {
+        position: static;
+        left: auto;
+        transform: none;
+        height: 80px;
+        margin: 0 auto 10px auto;
+    }
+
+    .parent {
+        height: auto;
+        padding: 10px;
+        margin-top: 20px;
+        flex-direction: row; /* Keep social icons in a row */
+    }
+
+    .background-logo, .background-logo1 {
+        display: none; /* Hide large background logos on mobile */
+    }
+
+    /* Hide About tab on mobile */
+    label[for="rd-4"] {
+        display: flex;
+    }
+}

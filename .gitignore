@@ -1,0 +1,39 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# .gitignore — SacliConnect
+# Only source code goes in git. Media, uploads, and dependencies are excluded.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── User-uploaded media (never commit user content) ──────────────────────────
+uploads/
+
+# ── Composer dependencies (run `composer install` on the server instead) ─────
+vendor/
+composer.lock
+
+# ── Large static media assets (host these on a CDN or cloud storage) ─────────
+assets/video/
+assets/audio/
+
+# ── Environment / secrets ────────────────────────────────────────────────────
+.env
+.env.local
+.env.production
+
+# ── Developer notes and local docs (not needed on server) ────────────────────
+docs/
+
+# ── OS and editor junk ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# ── PHP error logs ────────────────────────────────────────────────────────────
+*.log
+error_log
+
+# ── Empty placeholder folders (git doesn't track empty dirs) ─────────────────
+submissions/
