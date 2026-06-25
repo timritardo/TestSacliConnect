@@ -1,9 +1,4 @@
 ﻿<?php
-// Show errors so we can debug on Railway
-if (getenv('RAILWAY_ENVIRONMENT')) {
-    ini_set('display_errors', 1);
-    error_reporting(E_ALL);
-}
 session_start();
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -230,6 +225,12 @@ $conn->query("CREATE TABLE IF NOT EXISTS user_active_sessions (
 
 // Fetch Site Theme and Video
 $settings = [];
+// Ensure site_settings table exists before querying it
+$conn->query("CREATE TABLE IF NOT EXISTS site_settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    setting_key VARCHAR(100) NOT NULL UNIQUE,
+    setting_value TEXT
+)");
 $settings_res = $conn->query("SELECT setting_key, setting_value FROM site_settings");
 if($settings_res) while($row = $settings_res->fetch_assoc()) $settings[$row['setting_key']] = $row['setting_value'];
 
