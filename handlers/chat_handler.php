@@ -18,11 +18,11 @@ $conn->query("CREATE TABLE IF NOT EXISTS direct_messages (
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 )");
 // Add is_read column if not exists
-$conn->query("ALTER TABLE direct_messages ADD COLUMN IF NOT EXISTS is_read TINYINT(1) DEFAULT 0");
-$conn->query("ALTER TABLE direct_messages ADD COLUMN IF NOT EXISTS is_pinned TINYINT(1) DEFAULT 0");
-$conn->query("ALTER TABLE direct_messages ADD COLUMN IF NOT EXISTS media VARCHAR(255) DEFAULT NULL");
-$conn->query("ALTER TABLE direct_messages ADD COLUMN IF NOT EXISTS media_type VARCHAR(20) DEFAULT NULL");
-$conn->query("ALTER TABLE direct_messages ADD COLUMN IF NOT EXISTS is_unsent TINYINT(1) DEFAULT 0");
+safeAddColumn($conn, 'direct_messages', 'is_read', "TINYINT(1) DEFAULT 0");
+safeAddColumn($conn, 'direct_messages', 'is_pinned', "TINYINT(1) DEFAULT 0");
+safeAddColumn($conn, 'direct_messages', 'media', "VARCHAR(255) DEFAULT NULL");
+safeAddColumn($conn, 'direct_messages', 'media_type', "VARCHAR(20) DEFAULT NULL");
+safeAddColumn($conn, 'direct_messages', 'is_unsent', "TINYINT(1) DEFAULT 0");
 $conn->query("CREATE TABLE IF NOT EXISTS message_deletions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     message_id INT NOT NULL,

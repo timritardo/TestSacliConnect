@@ -22,3 +22,14 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8mb4");
 date_default_timezone_set('Asia/Manila');
+
+/**
+ * MySQL-compatible safe column add.
+ * Replaces MariaDB-only "ALTER TABLE ... ADD COLUMN IF NOT EXISTS" syntax.
+ */
+function safeAddColumn(mysqli $conn, string $table, string $column, string $definition): void {
+    $res = $conn->query("SHOW COLUMNS FROM `$table` LIKE '$column'");
+    if ($res && $res->num_rows === 0) {
+        $conn->query("ALTER TABLE `$table` ADD COLUMN $column $definition");
+    }
+}

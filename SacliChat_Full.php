@@ -9,7 +9,7 @@ if (!isset($_SESSION['student_id'])) {
 
 // --- DATABASE AUTO-FIX FOR THEMES ---
 $conn->query("CREATE TABLE IF NOT EXISTS direct_chat_themes (user1_id VARCHAR(50), user2_id VARCHAR(50), theme VARCHAR(50), PRIMARY KEY (user1_id, user2_id))");
-$conn->query("ALTER TABLE group_chats ADD COLUMN IF NOT EXISTS theme VARCHAR(50) DEFAULT 'default'");
+safeAddColumn($conn, 'group_chats', 'theme', "VARCHAR(50) DEFAULT 'default'");
 // ------------------------------------
 
 $my_id = $_SESSION['student_id'];

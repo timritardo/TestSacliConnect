@@ -30,12 +30,12 @@ foreach ($cols as $col => $def) {
         $conn->query("ALTER TABLE students ADD COLUMN $col $def");
     }
 }
-$conn->query("ALTER TABLE teachers ADD COLUMN IF NOT EXISTS cover_photo VARCHAR(255) DEFAULT ''");
-$conn->query("ALTER TABLE teachers ADD COLUMN IF NOT EXISTS cover_offset INT DEFAULT 0");
-$conn->query("ALTER TABLE teachers ADD COLUMN IF NOT EXISTS location VARCHAR(255) DEFAULT ''");
-$conn->query("ALTER TABLE teachers ADD COLUMN IF NOT EXISTS phone VARCHAR(20) DEFAULT NULL");
-$conn->query("ALTER TABLE teachers ADD COLUMN IF NOT EXISTS hide_phone TINYINT(1) DEFAULT 0");
-$conn->query("ALTER TABLE teachers ADD COLUMN IF NOT EXISTS birthdate DATE NULL");
+safeAddColumn($conn, 'teachers', 'cover_photo', "VARCHAR(255) DEFAULT ''");
+safeAddColumn($conn, 'teachers', 'cover_offset', "INT DEFAULT 0");
+safeAddColumn($conn, 'teachers', 'location', "VARCHAR(255) DEFAULT ''");
+safeAddColumn($conn, 'teachers', 'phone', "VARCHAR(20) DEFAULT NULL");
+safeAddColumn($conn, 'teachers', 'hide_phone', "TINYINT(1) DEFAULT 0");
+safeAddColumn($conn, 'teachers', 'birthdate', "DATE NULL");
 
 // Fetch Logged-in User Info for the Header (Sync with SacliConnect.php)
 $my_id_header = $_SESSION['student_id'];
@@ -62,7 +62,7 @@ $blackout_res = $conn->query("SELECT setting_value FROM site_settings WHERE sett
 $blackout_active = ($blackout_res && $blackout_res->num_rows > 0 && $blackout_res->fetch_assoc()['setting_value'] == '1');
 
 // AUTO-FIX: Ensure teachers table has bio column
-$conn->query("ALTER TABLE teachers ADD COLUMN IF NOT EXISTS bio TEXT");
+safeAddColumn($conn, 'teachers', 'bio', "TEXT");
 
 $message = "";
 $msg_type = "";

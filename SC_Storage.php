@@ -88,7 +88,7 @@ $conn->query("CREATE TABLE IF NOT EXISTS user_storage (
     INDEX(parent_id)
 )");
 // Ensure parent_id column exists for users with older database schemas
-$conn->query("ALTER TABLE user_storage ADD COLUMN IF NOT EXISTS parent_id INT DEFAULT 0");
+safeAddColumn($conn, 'user_storage', 'parent_id', "INT DEFAULT 0");
 
 /**
  * Table to store unique share links for users.

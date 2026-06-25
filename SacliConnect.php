@@ -179,8 +179,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['ac
 }
 
 // AUTO-FIX: Ensure posts table has category column
-$conn->query("ALTER TABLE posts ADD COLUMN IF NOT EXISTS category VARCHAR(50) DEFAULT 'General'");
-$conn->query("ALTER TABLE group_chats ADD COLUMN IF NOT EXISTS group_icon VARCHAR(255) DEFAULT ''");
+safeAddColumn($conn, 'posts', 'category', "VARCHAR(50) DEFAULT 'General'");
+safeAddColumn($conn, 'group_chats', 'group_icon', "VARCHAR(255) DEFAULT ''");
 
 // AUTO-FIX: Ensure interaction tables exist (Fix for Table 'sacliconnect.post_reactions' doesn't exist)
 $conn->query("CREATE TABLE IF NOT EXISTS post_reactions (
@@ -200,7 +200,7 @@ $conn->query("CREATE TABLE IF NOT EXISTS post_comments (
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 )");
 
-$conn->query("ALTER TABLE post_comments ADD COLUMN IF NOT EXISTS is_pinned TINYINT(1) DEFAULT 0");
+safeAddColumn($conn, 'post_comments', 'is_pinned', 'TINYINT(1) DEFAULT 0');
 
 $conn->query("CREATE TABLE IF NOT EXISTS notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -244,10 +244,10 @@ $conn->query("CREATE TABLE IF NOT EXISTS alumni (
     batch_year VARCHAR(20),
     profile_pic VARCHAR(255)
 )");
-$conn->query("ALTER TABLE alumni ADD COLUMN IF NOT EXISTS birthdate DATE NULL");
-$conn->query("ALTER TABLE alumni ADD COLUMN IF NOT EXISTS status TEXT NULL");
-$conn->query("ALTER TABLE alumni ADD COLUMN IF NOT EXISTS location VARCHAR(255) NULL");
-$conn->query("ALTER TABLE alumni ADD COLUMN IF NOT EXISTS student_id VARCHAR(50) NULL");
+safeAddColumn($conn, 'alumni', 'birthdate', 'DATE NULL');
+safeAddColumn($conn, 'alumni', 'status', 'TEXT NULL');
+safeAddColumn($conn, 'alumni', 'location', 'VARCHAR(255) NULL');
+safeAddColumn($conn, 'alumni', 'student_id', 'VARCHAR(50) NULL');
 
 // AUTO-FIX: Ensure login_history table exists
 $conn->query("CREATE TABLE IF NOT EXISTS login_history (
@@ -258,7 +258,7 @@ $conn->query("CREATE TABLE IF NOT EXISTS login_history (
     login_time DATETIME DEFAULT CURRENT_TIMESTAMP
 )");
 // Ensure location column exists
-$conn->query("ALTER TABLE login_history ADD COLUMN IF NOT EXISTS location VARCHAR(255) DEFAULT 'Unknown'");
+safeAddColumn($conn, 'login_history', 'location', "VARCHAR(255) DEFAULT 'Unknown'");
 
 // AUTO-FIX: Ensure achievements table exists for Assignments/Achievements page
 $conn->query("CREATE TABLE IF NOT EXISTS achievements (

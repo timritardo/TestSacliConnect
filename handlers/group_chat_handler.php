@@ -20,8 +20,8 @@ $conn->query("CREATE TABLE IF NOT EXISTS group_chat_members (
     user_id VARCHAR(50),
     joined_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )");
-$conn->query("ALTER TABLE group_chat_members ADD COLUMN IF NOT EXISTS last_read DATETIME DEFAULT CURRENT_TIMESTAMP");
-$conn->query("ALTER TABLE group_chat_members ADD COLUMN IF NOT EXISTS cleared_at DATETIME DEFAULT '1000-01-01'");
+safeAddColumn($conn, 'group_chat_members', 'last_read', "DATETIME DEFAULT CURRENT_TIMESTAMP");
+safeAddColumn($conn, 'group_chat_members', 'cleared_at', "DATETIME DEFAULT '1000-01-01'");
 $conn->query("CREATE TABLE IF NOT EXISTS group_chat_messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
     group_id INT,
@@ -29,9 +29,9 @@ $conn->query("CREATE TABLE IF NOT EXISTS group_chat_messages (
     message TEXT,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 )");
-$conn->query("ALTER TABLE group_chat_messages ADD COLUMN IF NOT EXISTS media VARCHAR(255) DEFAULT NULL");
-$conn->query("ALTER TABLE group_chat_messages ADD COLUMN IF NOT EXISTS is_pinned TINYINT(1) DEFAULT 0");
-$conn->query("ALTER TABLE group_chat_messages ADD COLUMN IF NOT EXISTS media_type VARCHAR(20) DEFAULT NULL");
+safeAddColumn($conn, 'group_chat_messages', 'media', "VARCHAR(255) DEFAULT NULL");
+safeAddColumn($conn, 'group_chat_messages', 'is_pinned', "TINYINT(1) DEFAULT 0");
+safeAddColumn($conn, 'group_chat_messages', 'media_type', "VARCHAR(20) DEFAULT NULL");
 $conn->query("CREATE TABLE IF NOT EXISTS group_chat_mentions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     message_id INT NOT NULL,
@@ -46,7 +46,7 @@ $conn->query("CREATE TABLE IF NOT EXISTS chat_media (
     file_type VARCHAR(50) NOT NULL,
     uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )");
-$conn->query("ALTER TABLE group_chats ADD COLUMN IF NOT EXISTS theme VARCHAR(50) DEFAULT 'default'");
+safeAddColumn($conn, 'group_chats', 'theme', "VARCHAR(50) DEFAULT 'default'");
 
 if(isset($_POST['action'])){
     

@@ -33,8 +33,8 @@ $conn->query("CREATE TABLE IF NOT EXISTS subject_chats (
     sort_order INT DEFAULT 0
 )");
 // Add columns for URL and Icon if they don't exist
-$conn->query("ALTER TABLE subject_chats ADD COLUMN IF NOT EXISTS url VARCHAR(255) DEFAULT '#'");
-$conn->query("ALTER TABLE subject_chats ADD COLUMN IF NOT EXISTS icon VARCHAR(255) DEFAULT ''");
+safeAddColumn($conn, 'subject_chats', 'url', "VARCHAR(255) DEFAULT '#'");
+safeAddColumn($conn, 'subject_chats', 'icon', "VARCHAR(255) DEFAULT ''");
 
 $conn->query("CREATE TABLE IF NOT EXISTS calendar_events (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -54,9 +54,9 @@ $conn->query("CREATE TABLE IF NOT EXISTS notifications (
 )");
 
 // AUTO-FIX: Ensure calendar columns exist for Image and Time
-$conn->query("ALTER TABLE calendar_events ADD COLUMN IF NOT EXISTS event_image VARCHAR(255)");
-$conn->query("ALTER TABLE calendar_events ADD COLUMN IF NOT EXISTS time_in TIME");
-$conn->query("ALTER TABLE calendar_events ADD COLUMN IF NOT EXISTS time_out TIME");
+safeAddColumn($conn, 'calendar_events', 'event_image', "VARCHAR(255)");
+safeAddColumn($conn, 'calendar_events', 'time_in', "TIME");
+safeAddColumn($conn, 'calendar_events', 'time_out', "TIME");
 
 $conn->query("CREATE TABLE IF NOT EXISTS teachers (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -66,7 +66,7 @@ $conn->query("CREATE TABLE IF NOT EXISTS teachers (
     profile_pic VARCHAR(255),
     email VARCHAR(100)
 )");
-$conn->query("ALTER TABLE teachers ADD COLUMN IF NOT EXISTS password VARCHAR(255)");
+safeAddColumn($conn, 'teachers', 'password', "VARCHAR(255)");
 
 // AUTO-FIX: Ensure alumni table exists
 $conn->query("CREATE TABLE IF NOT EXISTS alumni (
@@ -76,9 +76,9 @@ $conn->query("CREATE TABLE IF NOT EXISTS alumni (
     batch_year VARCHAR(20),
     profile_pic VARCHAR(255)
 )");
-$conn->query("ALTER TABLE alumni ADD COLUMN IF NOT EXISTS birthdate DATE NULL");
-$conn->query("ALTER TABLE alumni ADD COLUMN IF NOT EXISTS status TEXT NULL");
-$conn->query("ALTER TABLE alumni ADD COLUMN IF NOT EXISTS student_id VARCHAR(50) NULL");
+safeAddColumn($conn, 'alumni', 'birthdate', "DATE NULL");
+safeAddColumn($conn, 'alumni', 'status', "TEXT NULL");
+safeAddColumn($conn, 'alumni', 'student_id', "VARCHAR(50) NULL");
 
 // AUTO-FIX: Ensure achievements table exists
 $conn->query("CREATE TABLE IF NOT EXISTS achievements (
@@ -97,10 +97,10 @@ $conn->query("CREATE TABLE IF NOT EXISTS admins2 (
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
 )");
-$conn->query("ALTER TABLE admins2 ADD COLUMN IF NOT EXISTS profile_pic VARCHAR(255)");
-$conn->query("ALTER TABLE admins2 ADD COLUMN IF NOT EXISTS email VARCHAR(100)");
-$conn->query("ALTER TABLE admins2 ADD COLUMN IF NOT EXISTS otp_code VARCHAR(6) NULL");
-$conn->query("ALTER TABLE admins2 ADD COLUMN IF NOT EXISTS otp_expiry DATETIME NULL");
+safeAddColumn($conn, 'admins2', 'profile_pic', "VARCHAR(255)");
+safeAddColumn($conn, 'admins2', 'email', "VARCHAR(100)");
+safeAddColumn($conn, 'admins2', 'otp_code', "VARCHAR(6) NULL");
+safeAddColumn($conn, 'admins2', 'otp_expiry', "DATETIME NULL");
 
 // AUTO-FIX: Create System File Registry Table (Master List for Persistent Records)
 $conn->query("CREATE TABLE IF NOT EXISTS system_file_registry (
@@ -126,7 +126,7 @@ if($chk_pin->num_rows == 0){
 }
 
 // AUTO-FIX: Poll System Tables
-$conn->query("ALTER TABLE posts ADD COLUMN IF NOT EXISTS post_type ENUM('text', 'poll') DEFAULT 'text'");
+safeAddColumn($conn, 'posts', 'post_type', "ENUM('text', 'poll') DEFAULT 'text'");
 $conn->query("CREATE TABLE IF NOT EXISTS poll_options (
     id INT AUTO_INCREMENT PRIMARY KEY,
     post_id INT NOT NULL,
@@ -167,7 +167,7 @@ $conn->query("CREATE TABLE IF NOT EXISTS password_change_requests (
     status ENUM('pending', 'approved', 'denied') DEFAULT 'pending',
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 )");
-$conn->query("ALTER TABLE password_change_requests ADD COLUMN IF NOT EXISTS approved_at DATETIME NULL");
+safeAddColumn($conn, 'password_change_requests', 'approved_at', "DATETIME NULL");
 
 // AUTO-FIX: Create Evaluation Questions Table
 $conn->query("CREATE TABLE IF NOT EXISTS evaluation_questions (
@@ -175,7 +175,7 @@ $conn->query("CREATE TABLE IF NOT EXISTS evaluation_questions (
     question TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )");
-$conn->query("ALTER TABLE evaluation_questions ADD COLUMN IF NOT EXISTS category VARCHAR(255) DEFAULT 'General'");
+safeAddColumn($conn, 'evaluation_questions', 'category', "VARCHAR(255) DEFAULT 'General'");
 
 // Populate default evaluation questions if empty
 $chk_eval_q = $conn->query("SELECT id FROM evaluation_questions LIMIT 1");
@@ -214,14 +214,14 @@ foreach ($cols as $col => $def) {
         $conn->query("ALTER TABLE students ADD COLUMN $col $def");
     }
 }
-$conn->query("ALTER TABLE students ADD COLUMN IF NOT EXISTS created_at DATETIME DEFAULT CURRENT_TIMESTAMP");
-$conn->query("ALTER TABLE students ADD COLUMN IF NOT EXISTS is_restricted TINYINT(1) DEFAULT 0");
-$conn->query("ALTER TABLE students ADD COLUMN IF NOT EXISTS restriction_end_date DATETIME NULL");
+safeAddColumn($conn, 'students', 'created_at', "DATETIME DEFAULT CURRENT_TIMESTAMP");
+safeAddColumn($conn, 'students', 'is_restricted', "TINYINT(1) DEFAULT 0");
+safeAddColumn($conn, 'students', 'restriction_end_date', "DATETIME NULL");
 
-$conn->query("ALTER TABLE students ADD COLUMN IF NOT EXISTS phone VARCHAR(20) DEFAULT NULL");
-$conn->query("ALTER TABLE students ADD COLUMN IF NOT EXISTS hide_phone TINYINT(1) DEFAULT 0");
-$conn->query("ALTER TABLE teachers ADD COLUMN IF NOT EXISTS is_restricted TINYINT(1) DEFAULT 0");
-$conn->query("ALTER TABLE teachers ADD COLUMN IF NOT EXISTS restriction_end_date DATETIME NULL");
+safeAddColumn($conn, 'students', 'phone', "VARCHAR(20) DEFAULT NULL");
+safeAddColumn($conn, 'students', 'hide_phone', "TINYINT(1) DEFAULT 0");
+safeAddColumn($conn, 'teachers', 'is_restricted', "TINYINT(1) DEFAULT 0");
+safeAddColumn($conn, 'teachers', 'restriction_end_date', "DATETIME NULL");
 
 
 $updated = false;

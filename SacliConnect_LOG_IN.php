@@ -413,7 +413,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             if ($found) {
                 try {
                     // Auto-fix: Ensure teachers table has recovery columns
-                    $conn->query("ALTER TABLE teachers ADD COLUMN IF NOT EXISTS otp_code VARCHAR(255) NULL, ADD COLUMN IF NOT EXISTS otp_expiry DATETIME NULL");
+                    safeAddColumn($conn, 'teachers', 'otp_code', 'VARCHAR(255) NULL');
+                    safeAddColumn($conn, 'teachers', 'otp_expiry', 'DATETIME NULL');
 
                     $token = bin2hex(random_bytes(16));
                     $expiry = date('Y-m-d H:i:s', strtotime("+30 minutes"));
