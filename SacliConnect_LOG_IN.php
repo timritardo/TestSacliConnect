@@ -80,8 +80,8 @@ function sendLoginAlert(mysqli $conn, string $user_id, string $name, string $ema
 
     $conn->query("UPDATE $table SET logout_token = '$token' WHERE $id_col = '$real_id'");
 
-    $no_link = "http://" . $_SERVER['HTTP_HOST'] . "/Capstone_Project_2026/remote_logout.php?id=" . urlencode($user_id) . "&token=" . $token;
-    $yes_link = "http://" . $_SERVER['HTTP_HOST'] . "/Capstone_Project_2026/SacliConnect.php";
+    $no_link  = "https://" . $_SERVER['HTTP_HOST'] . "/remote_logout.php?id=" . urlencode($user_id) . "&token=" . $token;
+    $yes_link = "https://" . $_SERVER['HTTP_HOST'] . "/SacliConnect.php";
 
     $mail = new PHPMailer(true);
     try {
@@ -89,9 +89,10 @@ function sendLoginAlert(mysqli $conn, string $user_id, string $name, string $ema
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'sacliconnect20@gmail.com';
-        $mail->Password   = 'umrrmsyujepjopbo'; 
+        $mail->Password   = 'umrrmsyujepjopbo';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
+        $mail->Timeout    = 10; // fail fast — don't block login redirect
         $mail->SMTPOptions = array('ssl'=>array('verify_peer'=>false,'verify_peer_name'=>false,'allow_self_signed'=>true));
         $mail->setFrom('sacliconnect20@gmail.com', 'SacliConnect Security');
         $mail->addAddress($email);
@@ -151,7 +152,7 @@ function sendPasswordResetLink(mysqli $conn, string $user_id, string $name, stri
         $conn->query("UPDATE $table SET logout_token = '$token' WHERE $id_col = '$real_id'");
     }
 
-    $reset_link = "http://" . $_SERVER['HTTP_HOST'] . "/Capstone_Project_2026/remote_logout.php?id=" . urlencode($user_id) . "&token=" . $token;
+    $reset_link = "https://" . $_SERVER['HTTP_HOST'] . "/remote_logout.php?id=" . urlencode($user_id) . "&token=" . $token;
 
     $mail = new PHPMailer(true);
     try {
@@ -159,9 +160,10 @@ function sendPasswordResetLink(mysqli $conn, string $user_id, string $name, stri
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'sacliconnect20@gmail.com';
-        $mail->Password   = 'umrrmsyujepjopbo'; 
+        $mail->Password   = 'umrrmsyujepjopbo';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
+        $mail->Timeout    = 10; // fail fast
         $mail->SMTPOptions = array('ssl'=>array('verify_peer'=>false,'verify_peer_name'=>false,'allow_self_signed'=>true));
         $mail->setFrom('sacliconnect20@gmail.com', 'SacliConnect Security');
         $mail->addAddress($email);
@@ -307,7 +309,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $conn->query("UPDATE students SET is_online = 1, last_activity = NOW(), otp_code = NULL, otp_expiry = NULL WHERE student_id = '" . $user_data['student_id'] . "'");
 
                 recordLoginHistory($conn, $user_data['student_id'], $_POST['location'] ?? null);
-                sendLoginAlert($conn, $user_data['student_id'], $user_data['student_name'], $user_data['email'], 'student');
+                // Send alert asynchronously — don't block the redirect
+                $alert_id   = $user_data['student_id'];
+                $alert_name = $user_data['student_name'];
+                $alert_email = $user_data['email'];
+                register_shutdown_function(function() use ($conn, $alert_id, $alert_name, $alert_email) {
+                    sendLoginAlert($conn, $alert_id, $alert_name, $alert_email, 'student');
+                });
                 unset($_SESSION['mfa_pending_id']);
                 header("Location: intronext.php");
                 exit();
@@ -603,7 +611,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         $conn->query("UPDATE students SET is_online = 1, last_activity = NOW() WHERE student_id = '" . $user_data['student_id'] . "'");
                     }
                     recordLoginHistory($conn, $user_data['student_id'], $_POST['location'] ?? null);
-                    sendLoginAlert($conn, $user_data['student_id'], $user_data['student_name'], $user_data['email'], $user_data['type']);
+                    // Send alert asynchronously — don't block the redirect
+                    $alert_id    = $user_data['student_id'];
+                    $alert_name  = $user_data['student_name'];
+                    $alert_email = $user_data['email'];
+                    $alert_type  = $user_data['type'];
+                    register_shutdown_function(function() use ($conn, $alert_id, $alert_name, $alert_email, $alert_type) {
+                        sendLoginAlert($conn, $alert_id, $alert_name, $alert_email, $alert_type);
+                    });
                     header("Location: intronext.php");
                     exit();
                 }
