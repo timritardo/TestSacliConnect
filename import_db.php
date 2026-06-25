@@ -11,43 +11,47 @@ if (!isset($_GET['key']) || $_GET['key'] !== $key) {
     die("Access denied.");
 }
 
-require_once __DIR__ . '/config/database.php';
+// Connect without selecting a database first
+$host = getenv('MYSQLHOST')     ?: 'localhost';
+$user = getenv('MYSQLUSER')     ?: 'root';
+$pass = getenv('MYSQLPASSWORD') ?: '';
+$db   = getenv('MYSQLDATABASE') ?: 'sacliconnect';
+$port = (int)(getenv('MYSQLPORT') ?: 3306);
+
+$conn = new mysqli($host, $user, $pass, $db, $port);
+if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
+$conn->set_charset("utf8mb4");
 
 $sql_file = __DIR__ . '/sacliconnect.sql';
-if (!file_exists($sql_file)) {
-    die("sacliconnect.sql not found.");
-}
+if (!file_exists($sql_file)) die("sacliconnect.sql not found.");
 
 $sql = file_get_contents($sql_file);
 
-// Split into individual statements
-$statements = array_filter(
-    array_map('trim', explode(';', $sql)),
-    fn($s) => !empty($s) && !preg_match('/^(--|\/\*|SET SQL_MODE|START TRANSACTION|COMMIT|\/\*!)/i', $s)
-);
+// Strip comments and problematic SET statements that cause issues
+$sql = preg_replace('/^--.*$/m', '', $sql);
+$sql = preg_replace('/^\/\*.*?\*\/;/ms', '', $sql);
 
-$success = 0;
-$errors  = [];
+echo "<style>body{font-family:monospace;background:#0a1f16;color:#00ffaa;padding:30px;line-height:1.8;}</style>";
+echo "<h2>SacliConnect — Database Import</h2>";
 
-foreach ($statements as $statement) {
-    if (empty(trim($statement))) continue;
-    if ($conn->query($statement)) {
-        $success++;
+// Use multi_query to handle the full SQL dump correctly
+if ($conn->multi_query($sql)) {
+    $count = 0;
+    do {
+        $count++;
+        // Flush results to allow next query
+        if ($result = $conn->store_result()) {
+            $result->free();
+        }
+    } while ($conn->more_results() && $conn->next_result());
+
+    if ($conn->errno) {
+        echo "<p style='color:#ff4757'>❌ Error at query $count: " . $conn->error . "</p>";
     } else {
-        $errors[] = $conn->error . "<br><small>" . htmlspecialchars(substr($statement, 0, 100)) . "</small>";
+        echo "<p>✅ Import complete! Queries run: $count</p>";
+        echo "<p><a href='SacliConnect_LOG_IN.php' style='color:#00ffaa'>→ Go to Login Page</a></p>";
+        echo "<p style='color:#ff4757'>⚠️ Delete import_db.php from your server now!</p>";
     }
-}
-
-echo "<style>body{font-family:monospace;background:#0a1f16;color:#00ffaa;padding:30px;}</style>";
-echo "<h2>Database Import</h2>";
-echo "<p>✅ Statements executed: $success</p>";
-
-if (!empty($errors)) {
-    echo "<h3 style='color:#ff4757'>Errors (" . count($errors) . "):</h3>";
-    foreach ($errors as $e) echo "<p style='color:#ff4757'>❌ $e</p>";
 } else {
-    echo "<p>✅ All done! No errors.</p>";
+    echo "<p style='color:#ff4757'>❌ Failed to start import: " . $conn->error . "</p>";
 }
-
-echo "<p><a href='SacliConnect_LOG_IN.php' style='color:#00ffaa'>→ Go to Login</a></p>";
-echo "<p style='color:#ff4757'>⚠️ Delete import_db.php now!</p>";
