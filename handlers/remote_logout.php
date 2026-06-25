@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * remote_logout.php
  * Handles the "NO, LOGOUT" security feature.

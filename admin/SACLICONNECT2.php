@@ -1,4 +1,4 @@
-﻿ <?php
+ <?php
 /**
  * SACLICONNECT2.php — Admin Control.
  * Lahat ng binago dito ay makikita sa SacliConnect.php (same DB).

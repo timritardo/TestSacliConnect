@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * db.php — Backward compatibility shim.
  * This file is kept so any legacy code using require 'db.php' still works.

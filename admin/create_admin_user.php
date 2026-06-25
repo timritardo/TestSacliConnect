@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Run this file once to create an admin user correctly
 require_once __DIR__ . '/../config/database.php';
 if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);

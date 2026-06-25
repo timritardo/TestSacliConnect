@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 error_reporting(0); // Pigilan ang PHP warnings na lumabas sa screen
 session_start();
 

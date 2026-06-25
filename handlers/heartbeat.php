@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 if (isset($_SESSION['student_id'])) {
     $my_id = $_SESSION['student_id'];

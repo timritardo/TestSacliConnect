@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 require_once __DIR__ . '/../config/database.php';
 if(empty($_SESSION['admin_username'])) die("Not authorized");

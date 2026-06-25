@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 error_reporting(0); // Pigilan ang PHP warnings na sumira sa JSON response
 session_start();
 require_once __DIR__ . '/../config/database.php';

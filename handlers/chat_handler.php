@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 error_reporting(0); // Pigilan ang mga warnings na sumira sa HTML response
 require_once __DIR__ . '/../config/database.php';

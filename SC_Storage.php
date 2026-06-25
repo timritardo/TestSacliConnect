@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 require 'vendor/autoload.php'; // Load Composer libraries
 use Aws\S3\S3Client;

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Admin Control — SacliConnect style, admin interface.
  * Lahat ng binago dito ay makikita sa SacliConnect.php (naglo-load from same DB).
