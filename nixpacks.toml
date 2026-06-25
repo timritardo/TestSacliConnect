@@ -1,8 +1,0 @@
-[phases.setup]
-nixPkgs = ["php82", "php82Packages.composer"]
-
-[phases.install]
-cmds = ["composer install --no-dev --optimize-autoloader"]
-
-[start]
-cmd = "php -d extension=mysqli -d extension=mbstring -d extension=curl -d extension=openssl -S 0.0.0.0:$PORT -t ."
