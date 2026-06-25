@@ -3372,7 +3372,7 @@ footer {
 <?php
 // Load sidebar menu from DB (admin-editable)
 $sidebarItems = [];
-$sm = $conn->query("SELECT * FROM sidebar_menu GROUP BY label ORDER BY sort_order, id");
+$sm = $conn->query("SELECT * FROM sidebar_menu ORDER BY sort_order, id");
 if ($sm && $sm->num_rows > 0) {
     while ($r = $sm->fetch_assoc()) $sidebarItems[] = $r;
 }
