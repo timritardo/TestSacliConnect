@@ -3618,7 +3618,7 @@ $page = $_GET['page'] ?? 'main';
                             FROM evaluation_questions eq
                             LEFT JOIN evaluation_answers ea ON eq.id = ea.question_id
                             LEFT JOIN evaluations e ON ea.evaluation_id = e.id
-                            GROUP BY eq.id
+                            GROUP BY eq.id, eq.question, eq.category
                             ORDER BY eq.category, eq.id
                         ");
                         $current_cat_print = "";

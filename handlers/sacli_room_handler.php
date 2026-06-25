@@ -640,8 +640,8 @@ if (isset($_POST['action'])) {
     if ($_POST['action'] == 'get_active_meeting_participants') {
         $code = $_POST['room_code'];
         $sql = "SELECT l.student_id, 
-                COALESCE(s.student_name, t.name) as name, 
-                COALESCE(s.profile_pic, t.profile_pic) as profile_pic 
+                ANY_VALUE(COALESCE(s.student_name, t.name)) as name, 
+                ANY_VALUE(COALESCE(s.profile_pic, t.profile_pic)) as profile_pic 
                 FROM sacli_meeting_logs l 
                 LEFT JOIN students s ON l.student_id = s.student_id 
                 LEFT JOIN teachers t ON l.student_id = CONCAT('T-', t.id) 

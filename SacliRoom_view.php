@@ -670,7 +670,7 @@ $room_stmt->close();
                                 JOIN sacli_room_posts p ON s.post_id = p.id
                                 JOIN students st ON s.student_id = st.student_id
                                 WHERE p.room_id = ? AND s.grade IS NOT NULL
-                                GROUP BY s.student_id
+                                GROUP BY s.student_id, st.student_name, st.profile_pic
                                 ORDER BY avg_grade DESC
                                 LIMIT 10";
             $lb_stmt = $conn->prepare($leaderboard_sql);
