@@ -22,6 +22,10 @@ $conn = new mysqli($host, $user, $pass, $db, $port);
 if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
 $conn->set_charset("utf8mb4");
 
+// Disable strict error reporting so duplicate table errors are skipped
+$conn->query("SET FOREIGN_KEY_CHECKS=0");
+mysqli_report(MYSQLI_REPORT_OFF);
+
 $sql_file = __DIR__ . '/sacliconnect.sql';
 if (!file_exists($sql_file)) die("sacliconnect.sql not found.");
 
@@ -39,11 +43,14 @@ if ($conn->multi_query($sql)) {
     $count = 0;
     do {
         $count++;
-        // Flush results to allow next query
         if ($result = $conn->store_result()) {
             $result->free();
         }
-    } while ($conn->more_results() && $conn->next_result());
+        if ($conn->errno && $conn->errno != 1050) {
+            // 1050 = table already exists, skip it
+            echo "<p style='color:#ffaa00'>⚠️ Skipped (query $count): " . $conn->error . "</p>";
+        }
+    } while ($conn->more_results() && @$conn->next_result());
 
     if ($conn->errno) {
         echo "<p style='color:#ff4757'>❌ Error at query $count: " . $conn->error . "</p>";
