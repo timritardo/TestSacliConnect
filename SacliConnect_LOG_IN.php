@@ -1503,7 +1503,7 @@ $conn->close();
         <div class="intro-subtext">// INITIALIZING_UPLINK</div>
     </div>
 
-    <audio id="sacliConnectRevealSound" src="assets/audio/sound intro.mp3" preload="auto"></audio>
+    <audio id="sacliConnectRevealSound" src="assets/audio/logo-intro.mp3" preload="auto"></audio>
     <!-- ST. ANNE COLLEGE LUCENA, INC. VIDEO TEASER.mp4 -->
     <div class="video3" id="videoContainer">
         <video class="preview-video" loop muted playsinline id="myVideo" >
@@ -1556,7 +1556,7 @@ $conn->close();
 
     <!-- Forgot Password Form -->
     <div id="forgotPasswordForm" style="display:none; text-align: center;">
-        <img class="icon2" style=" position:relative; right:50%; transform: translateX(-78%);" src="internet.png" alt="Security">
+        <img class="icon2" style=" position:relative; right:50%; transform: translateX(-78%);" src="assets/images/internet.png" alt="Security">
         <div class="logo"><strong>FORGOT PASSWORD</strong></div>
         <p class="paragraph">Enter your registered email to receive a reset link.</p>
         <div id="forgotFlashMessage"></div>
@@ -1573,7 +1573,7 @@ $conn->close();
 
     <!-- Wait Verification UI -->
     <div id="waitVerificationUI" style="<?php echo $show_wait_ui ? '' : 'display:none;'; ?> text-align: center;">
-        <img class="icon2" src="network-access.png" alt="Wait">
+        <img class="icon2" src="assets/images/network-access.png" alt="Wait">
         <div class="logo"><strong>WAIT FOR VERIFICATION</strong></div>
         <p class="paragraph" style="color: #00ffaa; font-weight: bold; font-size: 1.1em;">A reset link has been sent to your email.</p>
         <p class="paragraph">Please check your inbox (<span id="maskedEmailDisplay" style="color:#00ffaa; font-weight:bold;"></span>) to proceed with recovery.</p>
@@ -1586,7 +1586,7 @@ $conn->close();
 
     <!-- Reset Password Form -->
     <div id="resetPasswordForm" style="<?php echo $show_reset_form ? '' : 'display:none;'; ?>">
-        <img class="icon2" src="Adobe Express - file.png" alt="Reset">
+        <img class="icon2" src="assets/images/Adobe Express - file.png" alt="Reset">
         <div class="logo"><strong>NEW PASSWORD</strong></div>
         <p class="paragraph">Establish a new access code for your account.</p>
         <div id="resetFlashMessage"></div>
@@ -1608,7 +1608,7 @@ $conn->close();
 
 
     <div id="adminForm" style="<?php echo ($show_admin && !$show_otp_form) ? '' : 'display:none;'; ?>">
-        <img class="icon2" src="Adobe Express - file.png" alt="School_logo">
+        <img class="icon2" src="assets/images/Adobe Express - file.png" alt="School_logo">
         <div class="logo"><strong style="color:turquoise">ADMIN LOGIN</strong></div>
         <div id="adminFlashMessage"></div>
         <form method="POST" action="admin/admin_login.php">
@@ -1629,7 +1629,7 @@ $conn->close();
 
     <!-- 2FA OTP Form -->
     <div id="otpForm" style="<?php echo $show_otp_form ? '' : 'display:none;'; ?> text-align: center;">
-        <img class="icon2" src="network-access.png" alt="Security_logo">
+        <img class="icon2" src="assets/images/network-access.png" alt="Security_logo">
         <div class="logo"><strong style="color: #00ffaa;">SECURITY VERIFICATION</strong></div>
         <p class="paragraph">A 6-digit verification code has been sent to:<br><strong style="color: #00ffaa;"><?php echo htmlspecialchars($mfa_email); ?></strong></p>
         
@@ -1653,7 +1653,7 @@ $conn->close();
 
     <!-- Admin Authentication (MFA OTP) Form -->
     <div id="adminOtpForm" style="<?php echo $show_admin_otp ? '' : 'display:none;'; ?> text-align: center;">
-        <img class="icon2" src="network-access.png" alt="Admin_Security">
+        <img class="icon2" src="assets/images/network-access.png" alt="Admin_Security">
         <div class="logo"><strong style="color: turquoise;">ADMIN AUTHENTICATION</strong></div>
         <p class="paragraph">Authorized access required. Code sent to:<br><strong style="color: #00ffaa;"><?php echo htmlspecialchars($admin_mfa_email); ?></strong></p>
         
@@ -1677,7 +1677,7 @@ $conn->close();
 
     <!-- Alumni Sign-up Section -->
     <div id="alumniSignupSection" style="display:none;">
-        <img class="icon2" src="student.png" alt="Alumni_logo">
+        <img class="icon2" src="assets/images/student.png" alt="Alumni_logo">
         <div class="logo"><strong>ALUMNI SIGN-UP</strong></div>
         <p class="paragraph">Enter your Alumni ID to sign up and connect.</p>
         <form onsubmit="submitAlumniId(); return false;">
@@ -1759,7 +1759,7 @@ $conn->close();
                 </p>
             </div>
             <div class="creator-card">
-                <img src="Screenshot 2024-09-05 221942.png" alt="Creator" class="creator-img">
+                <img src="assets/images/Screenshot 2024-09-05 221942.png" alt="Creator" class="creator-img">
                 <h3 class="creator-name">Justin Ritardo</h3>
                 <p class="creator-role">System Developer & Creator</p>
             </div>
