@@ -3282,7 +3282,9 @@ footer {
             $header_groups = $conn->query("SELECT g.id, g.name, g.group_icon FROM group_chats g JOIN group_chat_members m ON g.id = m.group_id WHERE m.user_id = '$my_id' ORDER BY g.created_at DESC");
             if($header_groups){
                 while($hg = $header_groups->fetch_assoc()){
-                    $hg_pic = !empty($hg['group_icon']) ? "uploads/".$hg['group_icon'] : "7icons8-organization-64.png";
+                    $hg_pic = !empty($hg['group_icon']) 
+                        ? (str_starts_with($hg['group_icon'], 'http') ? $hg['group_icon'] : "assets/images/7icons8-organization-64.png")
+                        : "assets/images/7icons8-organization-64.png";
                     $hg_name = htmlspecialchars($hg['name'], ENT_QUOTES);
                     echo '<div onclick="openGroupChat('.$hg['id'].', \''.$hg_name.'\', \''.$hg_pic.'\')" title="'.$hg_name.'" style="cursor:pointer; width:36px; height:36px; border-radius:50%; border:1px solid #00ffaa; overflow:hidden; flex-shrink:0; transition:0.2s;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'">
                             <img src="'.$hg_pic.'" style="width:100%; height:100%; object-fit:cover;">
@@ -3308,7 +3310,7 @@ footer {
         <div class="icon-wrapper" onclick="toggleDropdown('groupDropdown'); loadMyGroups();">
             <div class="hd-icon-btn group-btn">
                 <div class="shimmer"></div>
-                <img src="group.png" alt="group">
+                <img src="assets/images/group.png" alt="group">
             </div>
             <span class="badge-count" id="groupBadge" style="display:none;">0</span>
         </div>
@@ -3316,7 +3318,7 @@ footer {
         <div class="icon-wrapper" onclick="toggleDropdown('msgDropdown'); loadMessagesDropdown(); checkNewMessages();">
             <div class="hd-icon-btn msg-btn">
                 <div class="shimmer"></div>
-                <img src="communication.png" alt="communication">
+                <img src="assets/images/communication.png" alt="communication">
             </div>
             <span class="badge-count" id="msgCount" style="display:none;">0</span>
         </div>
@@ -3324,7 +3326,7 @@ footer {
         <div class="icon-wrapper" onclick="toggleDropdown('notifDropdown'); loadNotifications();">
             <div class="hd-icon-btn notif-btn">
                 <div class="shimmer"></div>
-                <img src="notification-bell.png" alt="notification">
+                <img src="assets/images/notification-bell.png" alt="notification">
             </div>
             <span class="badge-count" id="notifCount" style="display:none;">0</span>
         </div>
@@ -3333,7 +3335,7 @@ footer {
         <div class="icon-wrapper" onclick="openConcernChat()" title="Tell a Concern">
             <div class="hd-icon-btn concern-btn">
                 <div class="shimmer"></div>
-                <img src="important.png" alt="Help">
+                <img src="assets/images/important.png" alt="Help">
             </div>
             <span class="badge-count" id="concernBadge" style="display:none;">0</span>
         </div>
@@ -3350,7 +3352,7 @@ footer {
 <div id="msgDropdown" class="dropdown-popover" style="right: 110px;">
     <div class="dp-header">Messages</div>
     <div class="dp-item"><img src="assets/images/4icons8-teacher-50.png" style="width:30px;border-radius:50%;"> <div><strong>Mr. Smith</strong><small>Please pass your assignment.</small></div></div>
-    <a href="SacliChat_Full.php" class="dp-item" style="text-decoration: none; color: inherit;"><img src="communication.png" style="width:30px;border-radius:50%;"> <div><strong>Messenger open</strong><small>Click to open messenger</small></div></a>
+    <a href="SacliChat_Full.php" class="dp-item" style="text-decoration: none; color: inherit;"><img src="assets/images/communication.png" style="width:30px;border-radius:50%;"> <div><strong>Messenger open</strong><small>Click to open messenger</small></div></a>
     <div id="msgListContainer" style="max-height:300px; overflow-y:auto;">
         <div style="padding:15px; text-align:center; color:#aaa;">Loading...</div>
     </div>
@@ -3395,7 +3397,7 @@ $is_alumni_posts_page = (isset($_GET['page']) && ($_GET['page'] == 'alumni_posts
 <!-- ================= Sidebar ================= -->
 <div class="sidebar">
     <div class="sidebar-header">
-        <img src="Adobe Express - file.png" alt="Logo">
+        <img src="assets/images/Adobe Express - file.png" alt="Logo">
         <h2>SACLICONNECT</h2>
     </div>
     
@@ -3444,7 +3446,13 @@ $is_alumni_posts_page = (isset($_GET['page']) && ($_GET['page'] == 'alumni_posts
         ?>
         <li onclick="window.location.href='<?php echo $link; ?>'" class="<?php echo $activeClass; ?>" style="cursor:pointer;">
             <div class="sidebar-icon-box">
-                <?php if ($item['icon'] !== '') { ?><img class="icon2" src="<?php echo htmlspecialchars($item['icon']); ?>" alt=""><?php } ?>
+                <?php if ($item['icon'] !== '') { 
+                    $icon_src = $item['icon'];
+                    // Prepend assets/images/ if it's just a bare filename (no path, no http)
+                    if (!str_starts_with($icon_src, 'http') && !str_contains($icon_src, '/')) {
+                        $icon_src = 'assets/images/' . $icon_src;
+                    }
+                ?><img class="icon2" src="<?php echo htmlspecialchars($icon_src); ?>" alt=""><?php } ?>
             </div>
             <?php echo htmlspecialchars($item['label']); ?>
         </li>
@@ -3453,7 +3461,7 @@ $is_alumni_posts_page = (isset($_GET['page']) && ($_GET['page'] == 'alumni_posts
         <!-- Creator Info Item -->
         <li onclick="openCreatorModal()" style="cursor:pointer;">
             <div class="sidebar-icon-box">
-                <img class="icon2" src="coding.png" alt="Creator">
+                <img class="icon2" src="assets/images/coding.png" alt="Creator">
             </div>
             Creator Sacli Connect
         </li>
@@ -6452,7 +6460,7 @@ function openJoinRoomModal() { document.getElementById('joinRoomModal').style.di
 function closeJoinRoomModal() { document.getElementById('joinRoomModal').style.display = 'none'; }
 function openCreatorModal() { 
     // Play intro sound
-    var audio = new Audio('sound intro.mp3');
+    var audio = new Audio('assets/audio/sound intro.mp3');
     audio.volume = 0.7;
     audio.play().catch(function(error) { console.log("Audio play blocked:", error); });
 

@@ -237,13 +237,31 @@ $settings_res = $conn->query("SELECT setting_key, setting_value FROM site_settin
 if($settings_res) while($row = $settings_res->fetch_assoc()) $settings[$row['setting_key']] = $row['setting_value'];
 
 $current_theme = $settings['site_theme'] ?? 'default';
-$video_src = $settings['login_video'] ?? 'ST. ANNE COLLEGE LUCENA, INC. VIDEO TEASER.mp4'; // Default video
 
-// Check for seasonal video override
+// --- VIDEO SOURCE ---
+// Priority: seasonal override > DB default > local fallback
+$video_src = $settings['login_video'] ?? '';
+
+// Check for seasonal video override (e.g., halloween_video, christmas_video)
 $seasonal_video_key = $current_theme . '_video';
-if (isset($settings[$seasonal_video_key]) && !empty($settings[$seasonal_video_key])) {
+if (!empty($settings[$seasonal_video_key])) {
     $video_src = $settings[$seasonal_video_key];
 }
+
+// If still empty or a bare filename (no URL, no path), resolve it
+if (empty($video_src)) {
+    // No video in DB yet — use local file as last resort
+    $video_src = 'assets/video/ST. ANNE COLLEGE LUCENA, INC. VIDEO TEASER.mp4';
+} elseif (strpos($video_src, 'http') === false && strpos($video_src, 'assets/') === false) {
+    // Bare filename stored in DB before Supabase was set up
+    $video_src = 'assets/video/' . $video_src;
+}
+// If $video_src is already a full https:// URL (Supabase), use it as-is.
+
+// --- BACKGROUND LOGOS ---
+// Read from site_settings so admin can update them; fall back to local defaults
+$bg_logo1_src = !empty($settings['login_bg_logo1']) ? $settings['login_bg_logo1'] : 'assets/images/ST40.png';
+$bg_logo2_src = !empty($settings['login_bg_logo'])  ? $settings['login_bg_logo']  : 'assets/images/St.Anne_logo.png';
 
 $error = "";
 $show_otp_form = false;
@@ -1449,8 +1467,8 @@ $conn->close();
         </div>
     </div>
 
-    <img class="background-logo1" src="ST40.png" alt="">
-    <img class="background-logo" src="assets/images/St.Anne_logo.png" alt="">
+    <img class="background-logo1" src="<?php echo htmlspecialchars($bg_logo1_src); ?>" alt="">
+    <img class="background-logo" src="<?php echo htmlspecialchars($bg_logo2_src); ?>" alt="">
 
     <header>
         <div class="logo">
@@ -1485,8 +1503,7 @@ $conn->close();
         <div class="intro-subtext">// INITIALIZING_UPLINK</div>
     </div>
 
-    <!-- In-update ang audio source -->
-    <audio id="sacliConnectRevealSound" src="Logo Intro [u7jN-VhW8FI].mp3" preload="auto"></audio>
+    <audio id="sacliConnectRevealSound" src="assets/audio/sound intro.mp3" preload="auto"></audio>
     <!-- ST. ANNE COLLEGE LUCENA, INC. VIDEO TEASER.mp4 -->
     <div class="video3" id="videoContainer">
         <video class="preview-video" loop muted playsinline id="myVideo" >

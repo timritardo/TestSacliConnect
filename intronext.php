@@ -272,8 +272,8 @@ document.addEventListener('mousemove', (e) => {
 
 <div id="fadeLayer" class="fade-layer theme-<?php echo htmlspecialchars($current_theme); ?>"></div>
 
-<audio id="introSound" src="sound intro.mp3"></audio>
-<audio id="finishSound" src="digital-chime.mp3"></audio>
+<audio id="introSound" src="assets/audio/sound intro.mp3"></audio>
+<audio id="finishSound" src="assets/audio/pop sound effect cute.mp3"></audio>
 
 <script>
 window.addEventListener("load", function () {

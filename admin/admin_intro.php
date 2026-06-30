@@ -341,7 +341,7 @@ body.blackout-protocol {
 
 <div id="fadeLayer" class="fade-layer"></div>
 
-<audio id="introSound" src="HUD Activation Sound Effect [dv_BeLpfY4Y].mp3"></audio>
+<audio id="introSound" src="../assets/audio/sound intro.mp3"></audio>
 <!-- <audio id="typingSound" src="typing-sound.mp3" loop></audio> -->
 
 <script>
