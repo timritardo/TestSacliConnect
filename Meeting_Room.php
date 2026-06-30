@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 require_once __DIR__ . '/config/database.php';
 
@@ -215,10 +215,10 @@ $my_pic = !empty($me_data['profile_pic']) ? "uploads/".$me_data['profile_pic'] :
 
     <div class="control-dock">
         <button class="dock-btn active" id="btnMic" onclick="toggleMic()">
-            <img id="micIcon" src="mic_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" style="width:24px; height:24px;">
+            <img id="micIcon" src="assets/images/mic_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" style="width:24px; height:24px;">
         </button>
         <button class="dock-btn active" id="btnCam" onclick="toggleCam()">
-            <img id="camIcon" src="videocam_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" style="width:24px; height:24px;">
+            <img id="camIcon" src="assets/images/videocam_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" style="width:24px; height:24px;">
         </button>
         <button class="dock-btn" id="btnShare" onclick="toggleShare()" title="Share Screen">📺</button>
         

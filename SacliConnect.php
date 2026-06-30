@@ -1,4 +1,4 @@
-<?php 
+﻿<?php 
 session_start();
 require_once __DIR__ . '/config/database.php';
 
@@ -3471,14 +3471,14 @@ $is_alumni_posts_page = (isset($_GET['page']) && ($_GET['page'] == 'alumni_posts
         <!-- Alumni Posts Item -->
         <li onclick="window.location.href='SacliConnect.php?page=alumni_posts'" class="<?php echo (isset($_GET['page']) && $_GET['page'] == 'alumni_posts') ? 'active-item' : ''; ?>" style="cursor:pointer;">
             <div class="sidebar-icon-box">
-                <img class="icon2" src="post.png" alt="Alumni Posts">
+                <img class="icon2" src="assets/images/post.png" alt="Alumni Posts">
             </div>
             Alumni Posts
         </li>
         <?php if ($user_type !== 'teacher' && $user_type !== 'admin'): ?>
         <li onclick="window.location.href='SacliConnect.php?page=evaluates'" class="<?php echo (isset($_GET['page']) && $_GET['page'] == 'evaluates') ? 'active-item' : ''; ?>" style="cursor:pointer;">
             <div class="sidebar-icon-box">
-                <img class="icon2" src="checklist.png" alt="Evaluates">
+                <img class="icon2" src="assets/images/checklist.png" alt="Evaluates">
             </div>
             Evaluates
         </li>
@@ -3486,20 +3486,20 @@ $is_alumni_posts_page = (isset($_GET['page']) && ($_GET['page'] == 'alumni_posts
         <?php if ($user_type !== 'admin'): ?>
         <li onclick="window.location.href='SacliConnect.php?page=sacli_room'" class="<?php echo (isset($_GET['page']) && $_GET['page'] == 'sacli_room') ? 'active-item' : ''; ?>" style="cursor:pointer;">
             <div class="sidebar-icon-box">
-                <img class="icon2" src="folder.png" alt="SacliRoom">
+                <img class="icon2" src="assets/images/folder.png" alt="SacliRoom">
             </div>
             SacliRoom
         </li>
         <?php endif; ?>
         <li onclick="window.location.href='SacliConnect.php?page=meeting'" class="<?php echo (isset($_GET['page']) && $_GET['page'] == 'meeting') ? 'active-item' : ''; ?>" style="cursor:pointer;">
             <div class="sidebar-icon-box">
-                <img class="icon2" src="video-calling.png" onerror="this.src='communication.png'" alt="Meeting">
+                <img class="icon2" src="assets/images/video-calling.png" onerror="this.src='assets/images/communication.png'" alt="Meeting">
             </div>
             Meeting
         </li>
         <li onclick="window.location.href='SC_Storage.php'" class="<?php echo (isset($_GET['page']) && $_GET['page'] == 'sc_storage') ? 'active-item' : ''; ?>" style="cursor:pointer;">
             <div class="sidebar-icon-box">
-                <img class="icon2" src="folder.png" onerror="this.src='5icons8-assignment-50.png'" alt="SC Storage">
+                <img class="icon2" src="assets/images/folder.png" onerror="this.src='assets/images/5icons8-assignment-50.png'" alt="SC Storage">
             </div>
             SC Storage
         </li>
@@ -4747,7 +4747,7 @@ $is_settings_page = (isset($_GET['page']) && ($_GET['page'] == 'my_posts' || $_G
                         ACCESS_CODE: <b id="currentRoomCode">---</b>
                     </div>
                     <div style="display:flex; gap:10px;">
-                        <button class="dock-btn" style="width:35px; height:35px; border-radius:50%;" title="Participants" onclick="toggleMeetingSidebar('people')"><img src="chat_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Account"></button>
+                        <button class="dock-btn" style="width:35px; height:35px; border-radius:50%;" title="Participants" onclick="toggleMeetingSidebar('people')"><img src="assets/images/chat_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.png" alt="Account"></button>
                         <button class="dock-btn" style="width:35px; height:35px; border-radius:50%;" title="Chat" onclick="toggleMeetingSidebar('chat')">💬</button>
                     </div>
                 </div>
@@ -4793,11 +4793,11 @@ $is_settings_page = (isset($_GET['page']) && ($_GET['page'] == 'my_posts' || $_G
 
                 <div class="control-dock">
                     <button class="dock-btn active" id="btnMic" onclick="toggleMic()" title="Toggle Audio">
-                        <img id="micIcon" src="mic_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" style="width:24px; height:24px;">
+                        <img id="micIcon" src="assets/images/mic_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" style="width:24px; height:24px;">
                     </button>
                     <button class="dock-btn active" id="btnCam" onclick="toggleCam()" title="Toggle Video">
           
-                        <img id="camIcon" src="videocam_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" style="width:24px; height:24px;">
+                        <img id="camIcon" src="assets/images/videocam_24dp_000000_FILL0_wght400_GRAD0_opsz24.png" style="width:24px; height:24px;">
                     </button>
                     <button class="dock-btn" title="Share Screen" onclick="showFlash('Screen sharing link initializing...')"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></button>
                     
@@ -5044,7 +5044,7 @@ $is_settings_page = (isset($_GET['page']) && ($_GET['page'] == 'my_posts' || $_G
                 <div class="post security-card-premium" style="margin: 0; background: rgba(26, 61, 47, 0.3); border: 1px solid rgba(0, 255, 170, 0.2); position: relative; overflow: hidden;">
                     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #00ffaa, transparent); opacity: 0.5;"></div>
                     <h3 style="color: #00ffaa; font-size: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                        <img src="8icons8-setting-50.png" style="width: 20px; filter: drop-shadow(0 0 5px #00ffaa);"> Authentication Protocols
+                        <img src="assets/images/8icons8-setting-50.png" style="width: 20px; filter: drop-shadow(0 0 5px #00ffaa);"> Authentication Protocols
                     </h3>
                     <p style="font-size: 13px; color: #b0fce0; margin-bottom: 20px; opacity: 0.8;">Manage your credential integrity and neural link access.</p>
                     <button onclick="openChangePassModal()" class="sr-btn" style="width: 100%; justify-content: center; margin-bottom: 15px; background: linear-gradient(90deg, #00ffaa, #00cc88); color: #0a1f16; border: none; box-shadow: 0 0 15px rgba(0,255,170,0.3);">UPDATE ACCESS CODE</button>
@@ -5827,7 +5827,7 @@ $is_settings_page = (isset($_GET['page']) && ($_GET['page'] == 'my_posts' || $_G
         <div class="creator-flex">
             <div class="creator-profile-section">
                 <div class="creator-img-box">
-                    <img src="Screenshot 2024-09-05 221942.png" alt="Creator">
+                    <img src="assets/images/Screenshot 2024-09-05 221942.png" alt="Creator">
                 </div>
                 <h2 class="creator-name">Justin Ritardo</h2>
                 <p class="creator-role">System Developer & Creator</p>
@@ -6080,7 +6080,7 @@ $is_settings_page = (isset($_GET['page']) && ($_GET['page'] == 'my_posts' || $_G
     </div>
 
     <div class="cb-footer">
-        <label for="chatFileInput" style="cursor:pointer; margin-right:8px; display:flex; align-items:center;" title="Send Photo/Video"><img src="gallery.png" alt="Media" style="width:24px; height:24px;"></label>
+        <label for="chatFileInput" style="cursor:pointer; margin-right:8px; display:flex; align-items:center;" title="Send Photo/Video"><img src="assets/images/gallery.png" alt="Media" style="width:24px; height:24px;"></label>
         <input type="file" id="chatFileInput" style="display:none;" accept="image/*,video/*" onchange="previewChatFile('media')">
         
         <label for="chatDocInput" style="cursor:pointer; margin-right:8px; display:flex; align-items:center;" title="Send File"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00ffaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg></label>
@@ -6176,7 +6176,7 @@ $is_settings_page = (isset($_GET['page']) && ($_GET['page'] == 'my_posts' || $_G
 <div id="concernChatBox" class="chat-box-container" style="right: 20px;">
     <div class="cb-header">
         <div style="display:flex; align-items:center; gap:10px;">
-            <img src="Adobe Express - file.png" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+            <img src="assets/images/Adobe Express - file.png" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
             <span class="cb-title">Admin Support</span>
         </div>
         <span class="cb-close" onclick="closeConcernChat()">×</span>

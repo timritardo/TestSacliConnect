@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/includes/storage.php';
@@ -1374,7 +1374,7 @@ if (!$user) die("<div style='color:white;text-align:center;margin-top:50px;'>Stu
             <div class="icon-wrapper" onclick="toggleDropdown('groupDropdown'); loadMyGroups();">
                 <div class="hd-icon-btn group-btn">
                     <div class="shimmer"></div>
-                    <img src="group.png" alt="group">
+                    <img src="assets/images/group.png" alt="group">
                 </div>
                 <span class="badge-count" id="groupBadge" style="display:none;">0</span>
             </div>
@@ -1382,7 +1382,7 @@ if (!$user) die("<div style='color:white;text-align:center;margin-top:50px;'>Stu
             <div class="icon-wrapper" onclick="toggleDropdown('msgDropdown'); loadMessagesDropdown();">
                 <div class="hd-icon-btn msg-btn">
                     <div class="shimmer"></div>
-                    <img src="communication.png" alt="communication">
+                    <img src="assets/images/communication.png" alt="communication">
                 </div>
                 <span class="badge-count" id="msgCount" style="display:none;">0</span>
             </div>
@@ -1390,7 +1390,7 @@ if (!$user) die("<div style='color:white;text-align:center;margin-top:50px;'>Stu
             <div class="icon-wrapper" onclick="toggleDropdown('notifDropdown'); loadNotifications();">
                 <div class="hd-icon-btn notif-btn">
                     <div class="shimmer"></div>
-                    <img src="notification-bell.png" alt="notification">
+                    <img src="assets/images/notification-bell.png" alt="notification">
                 </div>
                 <span class="badge-count" id="notifCount" style="display:none;">0</span>
             </div>
@@ -1398,7 +1398,7 @@ if (!$user) die("<div style='color:white;text-align:center;margin-top:50px;'>Stu
             <div class="icon-wrapper" onclick="openConcernChat()" title="Tell a Concern">
                 <div class="hd-icon-btn concern-btn">
                     <div class="shimmer"></div>
-                    <img src="important.png" alt="Help">
+                    <img src="assets/images/important.png" alt="Help">
                 </div>
                 <span class="badge-count" id="concernBadge" style="display:none;">0</span>
             </div>

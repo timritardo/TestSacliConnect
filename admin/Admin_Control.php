@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Admin Control — SacliConnect style, admin interface.
  * Lahat ng binago dito ay makikita sa SacliConnect.php (naglo-load from same DB).
@@ -125,13 +125,13 @@ $showUpdated = isset($_GET['updated']) && $_GET['updated'] == '1';
     <ul>
         <li><a href="SacliConnect.php" class="sidebar-link">Dashboard</a></li>
         <li><a href="SacliChat_Full.php" class="sidebar-link">Messenger open</a></li>
-        <li><img class="icon2" src="2icons8-announcement-50.png" alt="">Announcements</li>
+        <li><img class="icon2" src="../assets/images/2icons8-announcement-50.png" alt="">Announcements</li>
         <li><img class="icon2" src="assets/images/3icons8-student-64.png" alt="">Students</li>
         <li><img class="icon2" src="assets/images/4icons8-teacher-50.png" alt="">Teachers</li>
-        <li><img class="icon2" src="5icons8-assignment-50.png" alt="">Assignments</li>
-        <li><img class="icon2" src="6icons8-calendar-50.png" alt="">Calendar</li>
-        <li><img class="icon2" src="7icons8-organization-64.png" alt="">Organizations</li>
-        <li><img class="icon2" src="8icons8-setting-50.png" alt="">Settings</li>
+        <li><img class="icon2" src="../assets/images/5icons8-assignment-50.png" alt="">Assignments</li>
+        <li><img class="icon2" src="../assets/images/6icons8-calendar-50.png" alt="">Calendar</li>
+        <li><img class="icon2" src="../assets/images/7icons8-organization-64.png" alt="">Organizations</li>
+        <li><img class="icon2" src="../assets/images/8icons8-setting-50.png" alt="">Settings</li>
     </ul>
 </div>
 

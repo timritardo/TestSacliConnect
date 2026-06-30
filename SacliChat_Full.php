@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 require_once __DIR__ . '/config/database.php';
 
@@ -2524,7 +2524,7 @@ $current_theme = ($theme_q && $theme_q->num_rows > 0) ? $theme_q->fetch_assoc()[
         <div class="chat-main">
             <!-- Welcome View (SPA Placeholder) -->
             <div id="welcomeView" style="flex:1; display:<?php echo $active_chat_id ? 'none' : 'flex'; ?>; flex-direction:column; align-items:center; justify-content:center; opacity:0.5; height: 100%;">
-                <img src="communication.png" style="width:100px; filter: grayscale(1) invert(1);">
+                <img src="assets/images/communication.png" style="width:100px; filter: grayscale(1) invert(1);">
                 <h2 style="color:#fff; margin-top:20px; font-family:'Courier New';">SELECT TO BEGIN</h2>
             </div>
 
@@ -2622,7 +2622,7 @@ $current_theme = ($theme_q && $theme_q->num_rows > 0) ? $theme_q->fetch_assoc()[
                             </div>
 
                             <div class="theme-preview-card" onclick="setChatTheme('flashlight')">
-                                <img src="ztheme1.png" class="theme-preview-img" alt="Flashlight Theme">
+                                <img src="assets/images/ztheme1.png" class="theme-preview-img" alt="Flashlight Theme">
                                 <span class="theme-preview-label">Flashlight Dark</span>
                             </div>
 
@@ -2693,7 +2693,7 @@ $current_theme = ($theme_q && $theme_q->num_rows > 0) ? $theme_q->fetch_assoc()[
                 <div id="fullChatFilePreviewArea"></div>
 
                 <div class="chat-footer">
-                    <label for="fullChatFileInput" title="Send Photo/Video"><img src="gallery.png" alt="Gallery"></label>
+                    <label for="fullChatFileInput" title="Send Photo/Video"><img src="assets/images/gallery.png" alt="Gallery"></label>
                     <input type="file" id="fullChatFileInput" style="display:none;" accept="image/*,video/*" multiple onchange="previewFullChatFile('media')">
 
         <label for="fullChatDocInput" title="Send File"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--neon-green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg></label>
@@ -2713,7 +2713,7 @@ $current_theme = ($theme_q && $theme_q->num_rows > 0) ? $theme_q->fetch_assoc()[
     <!-- CP Style Notification Pop-up -->
     <div id="mobileNotifPop" onclick="switchToInvitesTab()">
         <div style="background: rgba(0, 255, 170, 0.1); width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--neon-green);">
-            <img src="folder.png" style="width: 25px; height: 25px;">
+            <img src="assets/images/folder.png" style="width: 25px; height: 25px;">
         </div>
         <div style="flex: 1;">
             <div style="color: var(--neon-green); font-weight: 800; font-size: 10px; font-family: var(--terminal-font); letter-spacing: 1px;">SYSTEM INBOUND UPLINK</div>
@@ -3057,7 +3057,7 @@ $current_theme = ($theme_q && $theme_q->num_rows > 0) ? $theme_q->fetch_assoc()[
                                 inviteHTML += `
                                     <div class="conv-item active" style="display:flex; align-items:flex-start; gap:15px; cursor:default; padding: 15px;">
                                         <div style="position:relative; width:45px; height:45px; flex-shrink:0;">
-                                            <img src="folder.png" style="width:100%; height:100%; border-radius:10px; border: 1.5px solid var(--neon-green); background:rgba(0,255,170,0.1); padding:6px; box-shadow: 0 0 10px rgba(0,255,170,0.2);">
+                                            <img src="assets/images/folder.png" style="width:100%; height:100%; border-radius:10px; border: 1.5px solid var(--neon-green); background:rgba(0,255,170,0.1); padding:6px; box-shadow: 0 0 10px rgba(0,255,170,0.2);">
                                             <div style="position:absolute; top:-5px; left:-5px; background:#ff4757; width:16px; height:16px; border-radius:50%; border:2px solid #0a1f16; color:white; font-size:10px; font-weight:bold; display:flex; align-items:center; justify-content:center; animation: statusPulse 2s infinite; box-shadow: 0 0 10px #ff4757;">!</div>
                                         </div>
                                         <div style="flex:1; overflow: hidden;">
