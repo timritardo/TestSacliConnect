@@ -1,0 +1,2 @@
+assets/video/*.mp4 filter=lfs diff=lfs merge=lfs -text
+assets/audio/*.mp3 filter=lfs diff=lfs merge=lfs -text

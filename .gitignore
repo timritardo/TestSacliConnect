@@ -10,9 +10,10 @@ uploads/
 vendor/
 composer.lock
 
-# ── Large static media assets (host these on a CDN or cloud storage) ─────────
-assets/video/
-assets/audio/
+# ── Large static media assets tracked via Git LFS ────────────────────────────
+# assets/video/ and assets/audio/ are intentionally NOT ignored here.
+# They are tracked by Git LFS (see .gitattributes). LFS stores the actual
+# file content remotely; only lightweight pointer files live in the repo.
 
 # ── Environment / secrets ────────────────────────────────────────────────────
 .env
