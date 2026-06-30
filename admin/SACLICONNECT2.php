@@ -5,6 +5,7 @@
  */
 session_start();
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../includes/storage.php';
 if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
 
 if (empty($_SESSION['admin_username'])) {
@@ -525,10 +526,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $allowed = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
                     if (in_array(strtolower($ext), $allowed)) {
                         $new_filename = "link_icon_" . time() . "_$i." . $ext;
-                        if (!is_dir('uploads')) mkdir('uploads');
-                        if (move_uploaded_file($_FILES['subject_icon_file']['tmp_name'][$i], "uploads/" . $new_filename)) {
-                            $icon = $new_filename;
-                        }
+                        $url_icon = uploadToSupabase($_FILES['subject_icon_file']['tmp_name'][$i], $new_filename);
+                        if ($url_icon) $icon = $url_icon;
                     }
                 }
 
@@ -557,12 +556,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $pic_filename = null;
         if(isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0){
-            $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION)); // Fix: Use $_FILES['profile_pic']['name']
+            $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             if(in_array($ext, $allowed)){
-                $pic_filename = "profile_" . $new_id . "_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                move_uploaded_file($_FILES['profile_pic']['tmp_name'], "uploads/" . $pic_filename);
+                $dest = "profile_" . $new_id . "_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['profile_pic']['tmp_name'], $dest);
+                if ($url) $pic_filename = $url;
             }
         }
 
@@ -644,12 +643,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if($chk_stmt->get_result()->num_rows == 0){
             $pic_filename = "";
             if(isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0){
-                $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION)); // Fix: Use $_FILES['profile_pic']['name']
+                $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
                 $allowed = ['jpg', 'jpeg', 'png', 'gif'];
                 if(in_array($ext, $allowed)){
                     $pic_filename = "profile_" . $id . "_" . time() . "." . $ext;
-                    if (!is_dir('uploads')) mkdir('uploads'); // Ensure directory exists
-                    move_uploaded_file($_FILES['profile_pic']['tmp_name'], "uploads/" . $pic_filename);
+                    $url = uploadToSupabase($_FILES['profile_pic']['tmp_name'], $pic_filename);
+                    if ($url) $pic_filename = $url;
                 }
             }
             try {
@@ -738,9 +737,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ext = strtolower(pathinfo($_FILES['event_image']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             if(in_array($ext, $allowed)){
-                $imagePath = "uploads/event_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                move_uploaded_file($_FILES['event_image']['tmp_name'], $imagePath);
+                $dest = "event_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['event_image']['tmp_name'], $dest);
+                if ($url) $imagePath = $url;
             }
         }
         
@@ -805,9 +804,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             if(in_array($ext, $allowed)){
-                $pic_filename = "teacher_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                move_uploaded_file($_FILES['profile_pic']['tmp_name'], "uploads/" . $pic_filename);
+                $dest = "teacher_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['profile_pic']['tmp_name'], $dest);
+                if ($url) $pic_filename = $url;
             }
         }
         $stmt = $conn->prepare("INSERT INTO teachers (name, department, position, email, profile_pic, password, phone, hide_phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -839,10 +838,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             if(in_array($ext, $allowed)){
-                $pic_filename = "teacher_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                move_uploaded_file($_FILES['profile_pic']['tmp_name'], "uploads/" . $pic_filename);
-                $conn->query("UPDATE teachers SET profile_pic='$pic_filename' WHERE id=$id");
+                $dest = "teacher_edit_" . $id . "_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['profile_pic']['tmp_name'], $dest);
+                if ($url) $conn->query("UPDATE teachers SET profile_pic='$url' WHERE id=$id");
             }
         }
         $stmt->bind_param("sssssii", $name, $dept, $pos, $email, $phone, $hide_phone, $id);
@@ -866,9 +864,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             if(in_array($ext, $allowed)){
-                $pic_filename = "alumni_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                move_uploaded_file($_FILES['profile_pic']['tmp_name'], "uploads/" . $pic_filename);
+                $dest = "alumni_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['profile_pic']['tmp_name'], $dest);
+                if ($url) $pic_filename = $url;
             }
         }
         $stmt = $conn->prepare("INSERT INTO alumni (name, student_id, course, batch_year, birthdate, status, location, profile_pic, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -896,9 +894,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             if(in_array($ext, $allowed)){
-                $imagePath = "achievement_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                move_uploaded_file($_FILES['image']['tmp_name'], "uploads/" . $imagePath);
+                $dest = "achievement_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['image']['tmp_name'], $dest);
+                if ($url) $imagePath = $url;
             }
         }
         
@@ -1047,10 +1045,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             if(in_array($ext, $allowed)){
-                $pic_filename = "alumni_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                move_uploaded_file($_FILES['profile_pic']['tmp_name'], "uploads/" . $pic_filename);
-                $conn->query("UPDATE alumni SET profile_pic='$pic_filename' WHERE id=$id");
+                $dest = "alumni_edit_" . $id . "_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['profile_pic']['tmp_name'], $dest);
+                if ($url) $conn->query("UPDATE alumni SET profile_pic='$url' WHERE id=$id");
             }
         }
         $stmt = $conn->prepare("UPDATE alumni SET name=?, student_id=?, course=?, batch_year=?, birthdate=?, status=?, location=?, phone=? WHERE id=?");
@@ -1183,10 +1180,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ext = strtolower(pathinfo($_FILES['admin_pic']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             if(in_array($ext, $allowed)){
-                $new_name = "admin_" . $_SESSION['admin_id'] . "_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                move_uploaded_file($_FILES['admin_pic']['tmp_name'], "uploads/" . $new_name);
-                $conn->query("UPDATE admins2 SET profile_pic = '$new_name' WHERE id = '".$_SESSION['admin_id']."'");
+                $dest = "admin_" . $_SESSION['admin_id'] . "_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['admin_pic']['tmp_name'], $dest);
+                if ($url) $conn->query("UPDATE admins2 SET profile_pic = '$url' WHERE id = '".$_SESSION['admin_id']."'");
             }
         }
         $updated = true;
@@ -1203,20 +1199,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'update_login_video') {
         if(isset($_FILES['login_video_file']) && $_FILES['login_video_file']['error'] == 0){
             $ext = strtolower(pathinfo($_FILES['login_video_file']['name'], PATHINFO_EXTENSION));
-            $allowed = ['mp4', 'webm', 'ogg', 'mov'];
-            if(in_array($ext, $allowed)){
-                $new_filename = "login_video_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                if(move_uploaded_file($_FILES['login_video_file']['tmp_name'], "uploads/" . $new_filename)){
-                    $db_path = "uploads/" . $new_filename;
-                    
-                    // Delete old video if it exists in uploads
-                    $old_res = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key='login_video'");
-                    if($old_res && $row = $old_res->fetch_assoc()){
-                        if(strpos($row['setting_value'], 'uploads/') === 0 && file_exists($row['setting_value'])) @unlink($row['setting_value']);
-                    }
-
-                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('login_video', '$db_path') ON DUPLICATE KEY UPDATE setting_value='$db_path'");
+            if(in_array($ext, ['mp4', 'webm', 'ogg', 'mov'])){
+                $dest = "login_video_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['login_video_file']['tmp_name'], $dest, 'video/mp4');
+                if ($url) {
+                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('login_video', '$url') ON DUPLICATE KEY UPDATE setting_value='$url'");
                     $updated = true;
                 }
             }
@@ -1227,16 +1214,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'update_halloween_video') {
         if(isset($_FILES['halloween_video_file']) && $_FILES['halloween_video_file']['error'] == 0){
             $ext = strtolower(pathinfo($_FILES['halloween_video_file']['name'], PATHINFO_EXTENSION));
-            $allowed = ['mp4', 'webm', 'ogg', 'mov'];
-            if(in_array($ext, $allowed)){
-                $new_filename = "halloween_video_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                if(move_uploaded_file($_FILES['halloween_video_file']['tmp_name'], "uploads/" . $new_filename)){
-                    $db_path = "uploads/" . $new_filename;
-                    $key = 'halloween_video';
-                    $old_res = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key='$key'");
-                    if($old_res && $row = $old_res->fetch_assoc()) if(strpos($row['setting_value'], 'uploads/') === 0 && file_exists($row['setting_value'])) @unlink($row['setting_value']);
-                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('$key', '$db_path') ON DUPLICATE KEY UPDATE setting_value='$db_path'");
+            if(in_array($ext, ['mp4', 'webm', 'ogg', 'mov'])){
+                $dest = "halloween_video_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['halloween_video_file']['tmp_name'], $dest, 'video/mp4');
+                if ($url) {
+                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('halloween_video', '$url') ON DUPLICATE KEY UPDATE setting_value='$url'");
                     $updated = true;
                 }
             }
@@ -1247,16 +1229,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'update_christmas_video') {
         if(isset($_FILES['christmas_video_file']) && $_FILES['christmas_video_file']['error'] == 0){
             $ext = strtolower(pathinfo($_FILES['christmas_video_file']['name'], PATHINFO_EXTENSION));
-            $allowed = ['mp4', 'webm', 'ogg', 'mov'];
-            if(in_array($ext, $allowed)){
-                $new_filename = "christmas_video_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                if(move_uploaded_file($_FILES['christmas_video_file']['tmp_name'], "uploads/" . $new_filename)){
-                    $db_path = "uploads/" . $new_filename;
-                    $key = 'christmas_video';
-                    $old_res = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key='$key'");
-                    if($old_res && $row = $old_res->fetch_assoc()) if(strpos($row['setting_value'], 'uploads/') === 0 && file_exists($row['setting_value'])) @unlink($row['setting_value']);
-                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('$key', '$db_path') ON DUPLICATE KEY UPDATE setting_value='$db_path'");
+            if(in_array($ext, ['mp4', 'webm', 'ogg', 'mov'])){
+                $dest = "christmas_video_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['christmas_video_file']['tmp_name'], $dest, 'video/mp4');
+                if ($url) {
+                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('christmas_video', '$url') ON DUPLICATE KEY UPDATE setting_value='$url'");
                     $updated = true;
                 }
             }
@@ -1267,16 +1244,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'update_summer_video') {
         if(isset($_FILES['summer_video_file']) && $_FILES['summer_video_file']['error'] == 0){
             $ext = strtolower(pathinfo($_FILES['summer_video_file']['name'], PATHINFO_EXTENSION));
-            $allowed = ['mp4', 'webm', 'ogg', 'mov'];
-            if(in_array($ext, $allowed)){
-                $new_filename = "summer_video_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                if(move_uploaded_file($_FILES['summer_video_file']['tmp_name'], "uploads/" . $new_filename)){
-                    $db_path = "uploads/" . $new_filename;
-                    $key = 'summer_video';
-                    $old_res = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key='$key'");
-                    if($old_res && $row = $old_res->fetch_assoc()) if(strpos($row['setting_value'], 'uploads/') === 0 && file_exists($row['setting_value'])) @unlink($row['setting_value']);
-                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('$key', '$db_path') ON DUPLICATE KEY UPDATE setting_value='$db_path'");
+            if(in_array($ext, ['mp4', 'webm', 'ogg', 'mov'])){
+                $dest = "summer_video_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['summer_video_file']['tmp_name'], $dest, 'video/mp4');
+                if ($url) {
+                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('summer_video', '$url') ON DUPLICATE KEY UPDATE setting_value='$url'");
                     $updated = true;
                 }
             }
@@ -1287,16 +1259,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'update_new_year_video') {
         if(isset($_FILES['new_year_video_file']) && $_FILES['new_year_video_file']['error'] == 0){
             $ext = strtolower(pathinfo($_FILES['new_year_video_file']['name'], PATHINFO_EXTENSION));
-            $allowed = ['mp4', 'webm', 'ogg', 'mov'];
-            if(in_array($ext, $allowed)){
-                $new_filename = "new_year_video_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                if(move_uploaded_file($_FILES['new_year_video_file']['tmp_name'], "uploads/" . $new_filename)){
-                    $db_path = "uploads/" . $new_filename;
-                    $key = 'new_year_video';
-                    $old_res = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key='$key'");
-                    if($old_res && $row = $old_res->fetch_assoc()) if(strpos($row['setting_value'], 'uploads/') === 0 && file_exists($row['setting_value'])) @unlink($row['setting_value']);
-                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('$key', '$db_path') ON DUPLICATE KEY UPDATE setting_value='$db_path'");
+            if(in_array($ext, ['mp4', 'webm', 'ogg', 'mov'])){
+                $dest = "new_year_video_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['new_year_video_file']['tmp_name'], $dest, 'video/mp4');
+                if ($url) {
+                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('new_year_video', '$url') ON DUPLICATE KEY UPDATE setting_value='$url'");
                     $updated = true;
                 }
             }
@@ -1309,14 +1276,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ext = strtolower(pathinfo($_FILES['bg_logo1_file']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
             if(in_array($ext, $allowed)){
-                $new_filename = "bg_logo1_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                if(move_uploaded_file($_FILES['bg_logo1_file']['tmp_name'], "uploads/" . $new_filename)){
-                    $db_path = "uploads/" . $new_filename;
-                    $key = 'login_bg_logo1';
-                    $old_res = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key='$key'");
-                    if($old_res && $row = $old_res->fetch_assoc()) if(strpos($row['setting_value'], 'uploads/') === 0 && file_exists($row['setting_value'])) @unlink($row['setting_value']);
-                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('$key', '$db_path') ON DUPLICATE KEY UPDATE setting_value='$db_path'");
+                $dest = "bg_logo1_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['bg_logo1_file']['tmp_name'], $dest);
+                if ($url) {
+                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('login_bg_logo1', '$url') ON DUPLICATE KEY UPDATE setting_value='$url'");
                     $updated = true;
                 }
             }
@@ -1329,14 +1292,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ext = strtolower(pathinfo($_FILES['bg_logo2_file']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
             if(in_array($ext, $allowed)){
-                $new_filename = "bg_logo2_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                if(move_uploaded_file($_FILES['bg_logo2_file']['tmp_name'], "uploads/" . $new_filename)){
-                    $db_path = "uploads/" . $new_filename;
-                    $key = 'login_bg_logo';
-                    $old_res = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key='$key'");
-                    if($old_res && $row = $old_res->fetch_assoc()) if(strpos($row['setting_value'], 'uploads/') === 0 && file_exists($row['setting_value'])) @unlink($row['setting_value']);
-                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('$key', '$db_path') ON DUPLICATE KEY UPDATE setting_value='$db_path'");
+                $dest = "bg_logo2_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['bg_logo2_file']['tmp_name'], $dest);
+                if ($url) {
+                    $conn->query("INSERT INTO site_settings (setting_key, setting_value) VALUES ('login_bg_logo', '$url') ON DUPLICATE KEY UPDATE setting_value='$url'");
                     $updated = true;
                 }
             }

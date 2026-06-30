@@ -2,6 +2,7 @@
 session_start();
 error_reporting(0);
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../includes/storage.php';
 
 if(!isset($_SESSION['student_id'])) die("Not logged in");
 $my_id = $_SESSION['student_id'];
@@ -116,9 +117,8 @@ if(isset($_POST['action'])){
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             if(in_array(strtolower($ext), $allowed)){
                 $new_name = "group_" . time() . "_" . uniqid() . "." . $ext;
-                if(move_uploaded_file($_FILES['group_icon']['tmp_name'], "uploads/" . $new_name)){
-                    $icon_file = $new_name;
-                }
+                $url = uploadToSupabase($_FILES['group_icon']['tmp_name'], $new_name);
+                if ($url) $icon_file = $url;
             }
         }
 
@@ -186,12 +186,10 @@ if(isset($_POST['action'])){
                         else $type = 'file';
 
                         $filename = "gc_" . time() . "_" . uniqid() . "." . $ext;
-                        if(!is_dir('uploads')) mkdir('uploads');
-                        
-                        if(move_uploaded_file($tmp, "uploads/" . $filename)){
-                            $path = "uploads/" . $filename;
+                        $url = uploadToSupabase($tmp, $filename);
+                        if ($url) {
                             $m_stmt = $conn->prepare("INSERT INTO chat_media (message_id, chat_type, file_path, file_type) VALUES (?, 'group', ?, ?)");
-                            $m_stmt->bind_param("iss", $message_id, $path, $type);
+                            $m_stmt->bind_param("iss", $message_id, $url, $type);
                             $m_stmt->execute();
                         }
                     }

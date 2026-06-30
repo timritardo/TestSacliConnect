@@ -2,8 +2,7 @@
 session_start();
 error_reporting(0); // Pigilan ang mga warnings na sumira sa HTML response
 require_once __DIR__ . '/../config/database.php';
-
-// Ensure user is logged in for all actions in this handler
+require_once __DIR__ . '/../includes/storage.php'; for all actions in this handler
 if(!isset($_SESSION['student_id'])) {
     die("Not logged in"); // Or return a JSON error for AJAX requests
 }
@@ -197,12 +196,10 @@ if(isset($_POST['action'])){
                         else $type = 'file';
 
                         $filename = "chat_" . time() . "_" . uniqid() . "." . $ext;
-                        if(!is_dir('uploads')) mkdir('uploads');
-                        
-                        if(move_uploaded_file($tmp, "uploads/" . $filename)){
-                            $path = "uploads/" . $filename;
+                        $url = uploadToSupabase($tmp, $filename);
+                        if ($url) {
                             $m_stmt = $conn->prepare("INSERT INTO chat_media (message_id, chat_type, file_path, file_type) VALUES (?, 'direct', ?, ?)");
-                            $m_stmt->bind_param("iss", $message_id, $path, $type);
+                            $m_stmt->bind_param("iss", $message_id, $url, $type);
                             $m_stmt->execute();
                         }
                     }

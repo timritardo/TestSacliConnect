@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST) && empty($_FILES) && 
 try {
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); // Enable exceptions for mysqli
     require_once __DIR__ . '/../config/database.php';
+    require_once __DIR__ . '/../includes/storage.php';
     $conn->set_charset("utf8mb4");
 } catch (mysqli_sql_exception $e) {
     http_response_code(500); // Internal Server Error
@@ -330,12 +331,6 @@ if (isset($_POST['action'])) {
 
             // 2. Handle file attachments
             if (isset($_FILES['attachments']) && !empty($_FILES['attachments']['name'][0])) {
-                $upload_dir = 'uploads/';
-                if (!is_dir($upload_dir)) {
-                    if (!@mkdir($upload_dir, 0777, true)) throw new Exception("Server error: Could not create upload directory.");
-                }
-                if (!is_writable($upload_dir)) throw new Exception("Server error: Upload directory is not writable.");
-
                 $attachment_stmt = $conn->prepare("INSERT INTO sacli_room_post_attachments (post_id, file_path, original_filename, file_type) VALUES (?, ?, ?, ?)");
                 if ($attachment_stmt === false) throw new Exception("DB prepare error (attachments): " . $conn->error);
 
@@ -344,18 +339,11 @@ if (isset($_POST['action'])) {
                         $tmp_name = $_FILES['attachments']['tmp_name'][$key];
                         $original_name = basename($name);
                         $file_type = $_FILES['attachments']['type'][$key];
-                        
                         $new_filename = "roompost_" . $post_id . "_" . uniqid() . "_" . preg_replace('/[^A-Za-z0-9.\-]/', '_', $original_name);
-                        $destination = $upload_dir . $new_filename;
-
-                        if (!move_uploaded_file($tmp_name, $destination)) {
-                            throw new Exception("Failed to move uploaded file: " . htmlspecialchars($original_name));
-                        }
-                        
-                        $attachment_stmt->bind_param("isss", $post_id, $destination, $original_name, $file_type);
-                        if (!$attachment_stmt->execute()) {
-                            throw new Exception("DB execute error (attachments): " . $attachment_stmt->error);
-                        }
+                        $url = uploadToSupabase($tmp_name, $new_filename, $file_type);
+                        if (!$url) throw new Exception("Failed to upload file: " . htmlspecialchars($original_name));
+                        $attachment_stmt->bind_param("isss", $post_id, $url, $original_name, $file_type);
+                        if (!$attachment_stmt->execute()) throw new Exception("DB execute error (attachments): " . $attachment_stmt->error);
                     } elseif ($_FILES['attachments']['error'][$key] !== UPLOAD_ERR_NO_FILE) {
                         throw new Exception("Error uploading '" . htmlspecialchars($name) . "'. It might be too large.");
                     }
@@ -456,26 +444,16 @@ if (isset($_POST['action'])) {
             $check_stmt->close();
 
             // 2. Handle file upload
-            $upload_dir = 'uploads/submissions/';
-            if (!is_dir($upload_dir)) {
-                if (!@mkdir($upload_dir, 0777, true)) throw new Exception("Server error: Could not create submission directory.");
-            }
-            if (!is_writable($upload_dir)) throw new Exception("Server error: Submission directory is not writable.");
-
             $tmp_name = $_FILES['submission_file']['tmp_name'];
             $original_name = basename($_FILES['submission_file']['name']);
-            
             $new_filename = "sub_" . $post_id . "_" . $my_id . "_" . uniqid() . "_" . preg_replace('/[^A-Za-z0-9.\-]/', '_', $original_name);
-            $destination = $upload_dir . $new_filename;
-
-            if (!move_uploaded_file($tmp_name, $destination)) {
-                throw new Exception("Failed to move uploaded file: " . htmlspecialchars($original_name));
-            }
+            $url = uploadToSupabase($tmp_name, $new_filename);
+            if (!$url) throw new Exception("Failed to upload submission file: " . htmlspecialchars($original_name));
 
             // 3. Insert submission record into the database (Use ON DUPLICATE KEY UPDATE to handle resubmissions)
             $stmt = $conn->prepare("INSERT INTO sacli_room_submissions (post_id, student_id, file_path) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE file_path = VALUES(file_path), submitted_at = NOW(), grade = NULL");
             if ($stmt === false) throw new Exception("DB prepare error (submission): " . $conn->error);
-            $stmt->bind_param("iss", $post_id, $my_id, $destination);
+            $stmt->bind_param("iss", $post_id, $my_id, $url);
             if (!$stmt->execute()) throw new Exception("DB execute error (submission): " . $stmt->error);
             $stmt->close();
 

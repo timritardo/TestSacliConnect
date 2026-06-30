@@ -2,6 +2,7 @@
 session_start();
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../includes/storage.php';
 use PHPMailer\PHPMailer\PHPMailer;
 
 set_time_limit(0); 
@@ -117,8 +118,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (isset($_FILES['media']) && !empty($_FILES['media']['name'][0]) && $post_id > 0) {
-            $upload_dir = 'uploads/';
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
             $media_stmt = $conn->prepare("INSERT INTO post_media (post_id, file_path, file_type) VALUES (?, ?, ?)");
             $total_files = count($_FILES['media']['name']);
             for ($i = 0; $i < $total_files; $i++) {
@@ -128,9 +127,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $allowed = ['jpg','jpeg','png','gif','mp4','mov','webm'];
                     if (in_array($ext, $allowed)) {
                         $ftype = in_array($ext, ['mp4','mov','webm']) ? 'video' : 'photo';
-                        $destination = $upload_dir . "post_" . $post_id . "_" . uniqid() . "." . $ext;
-                        if (move_uploaded_file($tmp_name, $destination)) {
-                            $media_stmt->bind_param("iss", $post_id, $destination, $ftype);
+                        $dest_filename = "post_" . $post_id . "_" . uniqid() . "." . $ext;
+                        $url = uploadToSupabase($tmp_name, $dest_filename);
+                        if ($url) {
+                            $media_stmt->bind_param("iss", $post_id, $url, $ftype);
                             $media_stmt->execute();
                         }
                     }

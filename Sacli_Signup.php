@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/includes/storage.php';
 
 // Check if signup is enabled
 $signup_res = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key='signup_enabled'");
@@ -31,9 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_signup_enabled) {
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
             if (in_array($ext, $allowed)) {
-                $pic_filename = "profile_" . $sid . "_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads', 0777, true);
-                move_uploaded_file($_FILES['profile_pic']['tmp_name'], "uploads/" . $pic_filename);
+                $dest = "profile_" . $sid . "_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['profile_pic']['tmp_name'], $dest);
+                if ($url) $pic_filename = $url;
             }
         }
         
@@ -93,9 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $is_signup_enabled) {
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
             if (in_array($ext, $allowed)) {
-                $pic_filename = "teacher_" . time() . "_" . uniqid() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads', 0777, true);
-                move_uploaded_file($_FILES['profile_pic']['tmp_name'], "uploads/" . $pic_filename);
+                $dest = "teacher_" . time() . "_" . uniqid() . "." . $ext;
+                $url = uploadToSupabase($_FILES['profile_pic']['tmp_name'], $dest);
+                if ($url) $pic_filename = $url;
             }
         }
         

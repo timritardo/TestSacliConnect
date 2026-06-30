@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/includes/storage.php';
 
 // 1. Check kung naka-login (Security)
 if (!isset($_SESSION['student_id'])) {
@@ -115,12 +116,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $is_own_profile) {
         $ext = strtolower(pathinfo($_FILES['cover_photo']['name'], PATHINFO_EXTENSION));
         if (in_array($ext, $allowed)) {
             $real_id = $is_me_teacher ? substr($target_id, 2) : $target_id;
-            $new_filename = "cover_" . $real_id . "_" . time() . "." . $ext;
-            if (!is_dir('uploads')) mkdir('uploads');
-            if (move_uploaded_file($_FILES['cover_photo']['tmp_name'], "uploads/" . $new_filename)) {
+            $dest = "cover_" . $real_id . "_" . time() . "." . $ext;
+            $url = uploadToSupabase($_FILES['cover_photo']['tmp_name'], $dest);
+            if ($url) {
                 $table = $is_me_teacher ? 'teachers' : 'students';
                 $where = $is_me_teacher ? "id = '$real_id'" : "student_id = '$target_id'";
-                $conn->query("UPDATE $table SET cover_photo = '$new_filename' WHERE $where");
+                $conn->query("UPDATE $table SET cover_photo = '$url' WHERE $where");
             }
         }
     }
@@ -133,17 +134,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $is_own_profile) {
         if (in_array($ext, $allowed)) {
             if ($is_me_teacher) {
                 $real_id = substr($target_id, 2);
-                $new_filename = "teacher_" . $real_id . "_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], "uploads/" . $new_filename)) {
-                    $conn->query("UPDATE teachers SET profile_pic = '$new_filename' WHERE id = '$real_id'");
-                }
+                $dest = "teacher_" . $real_id . "_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['profile_pic']['tmp_name'], $dest);
+                if ($url) $conn->query("UPDATE teachers SET profile_pic = '$url' WHERE id = '$real_id'");
             } else {
-                $new_filename = "profile_" . $target_id . "_" . time() . "." . $ext;
-                if (!is_dir('uploads')) mkdir('uploads');
-                if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], "uploads/" . $new_filename)) {
-                    $conn->query("UPDATE students SET profile_pic = '$new_filename' WHERE student_id = '$target_id'");
-                }
+                $dest = "profile_" . $target_id . "_" . time() . "." . $ext;
+                $url = uploadToSupabase($_FILES['profile_pic']['tmp_name'], $dest);
+                if ($url) $conn->query("UPDATE students SET profile_pic = '$url' WHERE student_id = '$target_id'");
             }
         }
     }
